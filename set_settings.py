@@ -2,6 +2,8 @@ from termcolor import *
 import sys
 
 from clear_screen import clear_screen
+from playmusic import *
+import settings
 import store_files
 
 def set_settings(user, map):
@@ -15,7 +17,21 @@ def set_settings(user, map):
         elif choice == "2":
             break
         elif choice == "3":
-            break
+            while True:
+                choice_1 = input("1.音乐")
+                if choice_1 == "1":
+                    choice_2 = input("是否关闭音乐1.开\t2.关")
+                    if choice_2 == "1":
+                        settings.play_music_state = False
+                        stop()
+                        break
+                    elif choice_2 == "2":
+                        settings.play_music_state = True
+                        break
+                    else:
+                        cprint("(错误的选项)", "red")
+                else:
+                    cprint("(错误的选项)", "red")
         elif choice == "4":
             sys.exit(0)
         else:

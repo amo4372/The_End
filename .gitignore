@@ -2,4 +2,4 @@ __pycache__/
 bin/
 data/
 lib/
-music/
+.vscode/

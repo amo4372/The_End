@@ -1,5 +1,9 @@
 from termcolor import *
 
+version = "v0.0.0.6_042724_1826"
+
+play_music_state = True
+
 ATE = [colored("毁灭", "black"), colored("开拓", "yellow")]
 
 Anti_matter_Equation = {"FY":1, "E":0.1, "PE":0.25, "APM":2.5}

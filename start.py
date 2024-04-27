@@ -1,12 +1,12 @@
 from termcolor import *
 from clear_screen import clear_screen
+from playmusic import *
+import settings
 import time
 import sys
 import random
-
 import store_files
 
-version = "v0.0.0.1_042124_1602"
 username = ""
 user = None
 map = None
@@ -15,11 +15,13 @@ def start():
 	global user, map
 	clear_screen()
 	print(colored("\tThe End","white","on_black",["bold","dark"]))
+	play("music/The_End.wav")
 	choice = input("\t1.开始游戏\n\t2.选项\n\t3.详情\n\t4.退出\n\t")
 	if choice == "1":
 		choice_1 = input("1.新游戏\t2.继续游戏\t3.返回")
 		if choice_1 == "1":
 			clear_screen()
+			stop()
 			start_plot()
 		elif choice_1 == "2":
 			if store_files.read_file() == -1:
@@ -27,6 +29,7 @@ def start():
 			else:
 				user = store_files.user
 				map = store_files.map
+				stop()
 				return -1
 		elif choice_1 == "3":
 			start()
@@ -34,10 +37,26 @@ def start():
 			print(colored("(错误的选项)", "red"))
 			start()
 	elif choice == "2":
-		pass
+		while True:
+			choice_1 = input("1.音乐")
+			if choice_1 == "1":
+				choice_2 = input("是否关闭音乐1.开\t2.关")
+				if choice_2 == "1":
+					settings.play_music_state = False
+					stop()
+					start()
+					break
+				elif choice_2 == "2":
+					settings.play_music_state = True
+					start()
+					break
+				else:
+					cprint("(错误的选项)", "red")
+			else:
+				cprint("(错误的选项)", "red")
 	elif choice == "3":
 		print("--作者:amo4372--")
-		print(version)
+		print(settings.version)
 		time.sleep(2)
 		choice_1 = input("是否返回上一级(按任意键即可)")
 		if choice_1 != None:

@@ -54,7 +54,11 @@ class User():
 				print(colored("(请输入整百数)", "red"))
 				self.move()
 			else:
-				self.pos += self.s // 100
+				if self.pos + (self.s // 100) < 0:
+					cprint("不行, 那里根本走不了", "red")
+					self.move()
+				else:
+					self.pos += self.s // 100
 				if self.sp <= self.s / 100 /  self.speed * 1.5:
 					print(colored("不行,我撑不了那么久", "red"))
 					self.move()
@@ -72,7 +76,11 @@ class User():
 				print(colored("(请输入整百数)", "red"))
 				self.move()
 			else:
-				self.pos -= self.s // 100
+				if self.pos - (self.s // 100) < 0:
+					cprint("不行, 那里根本走不了", "red")
+					self.move()
+				else:
+					self.pos -= self.s // 100
 				if self.sp <= self.s / 100 /  self.speed * 1.5 :
 					print(colored("不行,我撑不了那么久", "red"))
 					self.move()

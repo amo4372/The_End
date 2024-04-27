@@ -1,13 +1,17 @@
 from pathlib import *
 from termcolor import *
 from types import *
+import settings
 import json
 
 from attack_role1 import AttackRole1
+from gold_coin_treasure_chest import GoldCoinTreasureChest as GCTC
+from safe_site import SafeSite
 from user import User
 from map import Map
 
-store_file_names = ["user", "map"]
+store_file_names = ["user", "map", "version"]
+version = settings.version
 user = None
 map = None
 
@@ -110,7 +114,13 @@ def store_file(user, map):
                                                     store_map.append(i)
                                                 elif type(i) == AttackRole1:
                                                     store_map.append(i.__dict__)
+                                                elif type(i) == GCTC:
+                                                    store_map.append(i.__dict__)
+                                                elif type(i) == SafeSite:
+                                                    store_map.append(i.__dict__)
                                             f.write(json.dumps(store_map))
+                                        elif store_file_name == "version":
+                                            f.write(json.dumps(version))
                                 break
                             elif choice == "2":
                                 break
@@ -121,8 +131,23 @@ def store_file(user, map):
                             w.write(json.dumps(path) + "\n")
                         with Path(f"data/{path}") as m:
                             m.mkdir()
-                        with Path(f"data/{path}/user.json") as f:
-                            f.write_text(json.dumps(user.__dict__))
+                        for store_file_name in store_file_names:
+                            with Path(f"data/{path}/{store_file_name}.json").open("a") as f:
+                                if store_file_name == "user":
+                                    f.write(json.dumps(user.__dict__))
+                                elif store_file_name == "map":
+                                    for i in map.map:
+                                        if type(i) == NoneType:
+                                            store_map.append(i)
+                                        elif type(i) == AttackRole1:
+                                            store_map.append(i.__dict__)
+                                        elif type(i) == GCTC:
+                                            store_map.append(i.__dict__)
+                                        elif type(i) == SafeSite:
+                                            store_map.append(i.__dict__)
+                                    f.write(json.dumps(store_map))
+                                elif store_file_name == "version":
+                                    f.write(json.dumps(version))
                 else:
                     r.write_text(json.dumps(path) + "\n")
                     with Path(f"data/{path}") as m:
@@ -137,7 +162,13 @@ def store_file(user, map):
                                         store_map.append(i)
                                     elif type(i) == AttackRole1:
                                         store_map.append(i.__dict__)
+                                    elif type(i) == GCTC:
+                                        store_map.append(i.__dict__)
+                                    elif type(i) == SafeSite:
+                                        store_map.append(i.__dict__)
                                 f.write(json.dumps(store_map))
+                            elif store_file_name == "version":
+                                f.write(json.dumps(version))
             break
         elif choice == "3":
             break
@@ -175,13 +206,16 @@ def read_file():
                         list_items = json.loads(file.read_text())
                         read_map = []
                         for items in list_items:
-                            print(items)
                             read_map.append(items)
                         for i in read_map:
                             if type(i) == NoneType:
                                 map.map.append(None)
-                            elif i["id"] == 1:
+                            elif i["id"] == "AR1":
                                 map.map.append(AttackRole1(**i))
+                            elif i["id"] == "GCTC":
+                                map.map.append(GCTC(**i))
+                            elif i["id"] == "SafeSite":
+                                map.map.append(SafeSite(**i))
         else:
             cprint("没有存档!", "red")
             return -1
