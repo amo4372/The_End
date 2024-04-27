@@ -12,6 +12,11 @@ user = None
 map = None
 
 def store_file(user, map):
+    with Path("data") as f:
+        if f.exists():
+            pass
+        else:
+            f.mkdir()
     while True:
         choice = input("是否对存档操作1.是\t2.否\t3.退出")
         if choice == "1":
