@@ -4,10 +4,15 @@ import time
 import sys
 import random
 
+import store_files
+
 version = "v0.0.0.1_042124_1602"
 username = ""
+user = None
+map = None
 
 def start():
+	global user, map
 	clear_screen()
 	print(colored("\tThe End","white","on_black",["bold","dark"]))
 	choice = input("\t1.开始游戏\n\t2.选项\n\t3.详情\n\t4.退出\n\t")
@@ -16,9 +21,14 @@ def start():
 		if choice_1 == "1":
 			clear_screen()
 			start_plot()
-		elif choice == "2":
-			pass
-		elif choice == "3":
+		elif choice_1 == "2":
+			if store_files.read_file() == -1:
+				start()
+			else:
+				user = store_files.user
+				map = store_files.map
+				return -1
+		elif choice_1 == "3":
 			start()
 		else:
 			print(colored("(错误的选项)", "red"))
@@ -58,6 +68,8 @@ def start_plot():
 	while True:
 		choice = input("跳过(1.是  2.否)")
 		if choice == "1":
+			clear_screen()
+			username = input(colored("(该取什么名字呢?)", "yellow"))
 			clear_screen()
 			break
 		elif choice == "2":
