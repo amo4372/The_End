@@ -6,13 +6,13 @@ from playmusic import *
 import settings
 import store_files
 
-def set_settings(user, map):
+def set_settings(user, map, oper_time):
     clear_screen()
     cprint("--菜单--", "white", "on_black", ["bold","dark"])
     while True:
         choice = input("1.保存游戏\n2.返回\n3.选项\n4.退出")
         if choice == "1":
-            store_files.store_file(user, map)
+            store_files.store_file(user, map, oper_time)
             break
         elif choice == "2":
             break

@@ -13,10 +13,10 @@ class SafeSite():
             self.reply_money = reply_money
     def set(self, user):
         self.reply_hp = user.hp * random.randrange(10, 50, 10) / 100
-        self.reply_sp = user.sp * random.randrange(10, 50, 10) / 100
+        self.reply_sp = 100 * random.randrange(10, 50, 10) / 100
         self.reply_e = user.e * random.randrange(10, 50, 10) / 100
-        self.reply_money = random.randrange(0, 1000, 10)
-    def pri(self, user):
+        self.reply_money = random.randrange(0, 400, 10)
+    def pri(self, user, oper_time):
         self.set(user)
         clear_screen()
         cprint("这里是安全站点?", "yellow")
@@ -33,7 +33,7 @@ class SafeSite():
                 time.sleep(1)
                 print(f"已恢复精神值{round(self.reply_sp, 3)}%")
                 time.sleep(1)
-                cprint(f"已恢复技能能量{self.reply_e}", "magenta")
+                cprint(f"已恢复技能能量{self.reply_e}%", "magenta")
                 time.sleep(1)
                 print("另外,你探索了一下安全站点")
                 cprint(f"获得了{self.reply_money}元", "yellow")
@@ -52,6 +52,7 @@ class SafeSite():
                 user.money += self.reply_money
                 print("就在你刚走不远时, 忽然安全站点不见了")
                 time.sleep(1)
+                oper_time.next_day()
                 break
             elif choice == "2":
                 cprint("凭我的直觉,我还不累", "yellow")

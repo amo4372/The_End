@@ -42,6 +42,7 @@ class GoldCoinTreasureChest():
                 if choice == "1":
                     print("你激动的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    user.money += self.money
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -52,9 +53,10 @@ class GoldCoinTreasureChest():
             print("你发现了一个铁制宝箱")
             while True:
                 choice = input("是否打开1.是\t2.否")
-                if choice == 1:
+                if choice == "1":
                     print("你兴奋的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    user.money += self.money
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -65,9 +67,10 @@ class GoldCoinTreasureChest():
             print("你发现了一个金制宝箱")
             while True:
                 choice = input("是否打开1.是\t2.否")
-                if choice == 1:
+                if choice == "1":
                     print("你迫不及待的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    user.money += self.money
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -78,9 +81,10 @@ class GoldCoinTreasureChest():
             print("你发现了一个钻制宝箱")
             while True:
                 choice = input("是否打开1.是\t2.否")
-                if choice == 1:
+                if choice == "1":
                     print("你全神贯注的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    user.money += self.money
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -91,9 +95,10 @@ class GoldCoinTreasureChest():
             print("你发现了一个钛制宝箱")
             while True:
                 choice = input("是否打开1.是\t2.否")
-                if choice == 1:
+                if choice == "1":
                     print("你欣喜若狂的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    user.money += self.money
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -104,9 +109,10 @@ class GoldCoinTreasureChest():
             print("你发现了一个铀制宝箱")
             while True:
                 choice = input("是否打开1.是\t2.否")
-                if choice == 1:
+                if choice == "1":
                     print("你颤抖着的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    user.money += self.money
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -117,14 +123,14 @@ class GoldCoinTreasureChest():
             print("你发现了一个表面刻着虚无图案的宝箱")
             while True:
                 choice = input("是否打开1.是\t2.否")
-                if choice == 1:
+                if choice == "1":
                     print("你打开宝箱")
                     print("仿佛一切都是无穷的")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    user.money += self.money
                     break
                 elif choice == "2":
                     cprint("amo4372:我替你感到悲伤", "yellow")
                     break
                 else:
                     cprint("(错误的选项)", "red")
-        user.money += self.money

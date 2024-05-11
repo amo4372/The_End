@@ -1,21 +1,22 @@
 from pathlib import *
 from termcolor import *
-from types import *
 import settings
 import json
 
+from settings import NoneType
 from attack_role1 import AttackRole1
 from gold_coin_treasure_chest import GoldCoinTreasureChest as GCTC
 from safe_site import SafeSite
+from transaction_site import TransactionSite as TS
+from backtracking_site import BacktrackingSite as BS
+from oper_time import OperTime
 from user import User
 from map import Map
 
-store_file_names = ["user", "map", "version"]
+store_file_names = ["user", "map", "opertime", "version"]
 version = settings.version
-user = None
-map = None
 
-def store_file(user, map):
+def store_file(user, map, oper_time):
     with Path("data") as f:
         if f.exists():
             pass
@@ -118,9 +119,15 @@ def store_file(user, map):
                                                     store_map.append(i.__dict__)
                                                 elif type(i) == SafeSite:
                                                     store_map.append(i.__dict__)
+                                                elif type(i) == TS:
+                                                    store_map.append(i.__dict__)
+                                                elif type(i) == BS:
+                                                    store_map.append(i.__dict__)
                                             f.write(json.dumps(store_map))
                                         elif store_file_name == "version":
                                             f.write(json.dumps(version))
+                                        elif store_file_name == "opertime":
+                                            f.write(json.dumps(oper_time.__dict__))
                                 break
                             elif choice == "2":
                                 break
@@ -145,9 +152,15 @@ def store_file(user, map):
                                             store_map.append(i.__dict__)
                                         elif type(i) == SafeSite:
                                             store_map.append(i.__dict__)
+                                        elif type(i) == TS:
+                                            store_map.append(i.__dict__)
+                                        elif type(i) == BS:
+                                            store_map.append(i.__dict__)
                                     f.write(json.dumps(store_map))
                                 elif store_file_name == "version":
                                     f.write(json.dumps(version))
+                                elif store_file_name == "opertime":
+                                    f.write(json.dumps(oper_time.__dict__))
                 else:
                     r.write_text(json.dumps(path) + "\n")
                     with Path(f"data/{path}") as m:
@@ -166,16 +179,21 @@ def store_file(user, map):
                                         store_map.append(i.__dict__)
                                     elif type(i) == SafeSite:
                                         store_map.append(i.__dict__)
+                                    elif type(i) == TS:
+                                        store_map.append(i.__dict__)
+                                    elif type(i) == BS:
+                                        store_map.append(i.__dict__)
                                 f.write(json.dumps(store_map))
                             elif store_file_name == "version":
                                 f.write(json.dumps(version))
+                            elif store_file_name == "opertime":
+                                f.write(json.dumps(oper_time.__dict__))
             break
         elif choice == "3":
             break
         else:
             cprint("(错误的选项)", "red")
 def read_file():
-    global user, map
     with Path("data/name.json") as r:
         if r.exists():
             read_texts = r.read_text().splitlines()
@@ -189,7 +207,7 @@ def read_file():
             while True:
                 try:
                     num = int(input("请输入存档序号"))
-                    if num > i:
+                    if num > i or num <= 0:
                         cprint("存档不存在!", "red")
                     else:
                         break
@@ -216,6 +234,14 @@ def read_file():
                                 map.map.append(GCTC(**i))
                             elif i["id"] == "SafeSite":
                                 map.map.append(SafeSite(**i))
+                            elif i["id"] == "TS":
+                                map.map.append(TS(**i))
+                            elif i["id"] == "BS":
+                                map.map.append(BS(**i))
+                    elif file.name == "opertime.json":
+                        read_texts = json.loads(file.read_text())
+                        oper_time = OperTime(**read_texts)
+            return user, map, oper_time
         else:
             cprint("没有存档!", "red")
             return -1

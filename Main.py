@@ -1,2 +1,3 @@
-import settings
 import event
+
+event.event()
