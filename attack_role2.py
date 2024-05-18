@@ -24,7 +24,7 @@ class AttackRole2():
         self.name = colored(name, "magenta")
         self.level = level
         self.hp = hp
-        self.money = money + random.randint(0, 50)
+        self.money = money + random.randint(1, 50)
         self.nhp = nhp
         self.sp = sp
         self.ap = ap

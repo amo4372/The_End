@@ -1,40 +1,52 @@
 from termcolor import *
+from playmusic import sound_play
+import settings
 import random
+import time
 
 prob_dict = {"Wood":0.6, "Iron":0.2, "Gold":0.1, "Diamond":0.05, "Titanium":0.04, "Uranium":0.009, "Infinite":0.001}
 
 class GoldCoinTreasureChest():
-    def __init__(self,id = "GCTC" ,prob = None, money = None, answer = None):
+    def __init__(self,id = "GCTC" ,prob = None, money = None, answer = None, exp = None):
         self.id = id
-        if prob and money:
+        if prob and money and answer and exp:
             self.prob = prob
             self.money = money
             self.answer = answer
+            self.exp = exp
+        else:
+            self.answer = self.set()
     def set(self):
         self.prob = random.randint(0, 1000)
         if self.prob >= (1 - prob_dict["Infinite"]) * 1000:
             self.money = 5000 + random.randrange(0 ,5000, 1000)
+            self.exp = self.money // 10
             return -7
         elif self.prob >= (1 - prob_dict["Uranium"]) * 1000:
             self.money = 1000 + random.randrange(-50 ,50, 10)
+            self.exp = self.money // 10
             return -6
         elif self.prob >= (1 - prob_dict["Titanium"]) * 1000:
             self.money = 800 + random.randrange(-50 ,50, 10)
+            self.exp = self.money // 10
             return -5
         elif self.prob >= (1 - prob_dict["Diamond"]) * 1000:
             self.money = 500 + random.randrange(-50 ,50, 10)
+            self.exp = self.money // 10
             return -4
         elif self.prob >= (1 - prob_dict["Gold"]) * 1000:
             self.money = 100 + random.randrange(-50 ,100 ,10)
+            self.exp = self.money // 10
             return -3
         elif self.prob >= (1 - prob_dict["Iron"]) * 1000:
             self.money = 50 + random.randrange(-50 ,50 ,10)
+            self.exp = self.money // 10
             return -2
         else:
             self.money = 10 + random.randrange(-10, 50 ,10)
+            self.exp = self.money // 10
             return -1
     def pri(self, user):
-        self.answer = self.set()
         if self.answer == -1:
             print("你发现了一个木制宝箱")
             while True:
@@ -42,7 +54,10 @@ class GoldCoinTreasureChest():
                 if choice == "1":
                     print("你激动的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    cprint(f"你已增加经验: {self.exp}点", "cyan")
+                    sound_play(random.choice(settings.sounds["coins"]))
                     user.money += self.money
+                    user.exp += self.exp
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -56,7 +71,10 @@ class GoldCoinTreasureChest():
                 if choice == "1":
                     print("你兴奋的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    cprint(f"你已增加经验: {self.exp}点", "cyan")
+                    sound_play(random.choice(settings.sounds["coins"]))
                     user.money += self.money
+                    user.exp += self.exp
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -70,7 +88,10 @@ class GoldCoinTreasureChest():
                 if choice == "1":
                     print("你迫不及待的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    cprint(f"你已增加经验: {self.exp}点", "cyan")
+                    sound_play(random.choice(settings.sounds["coins"]))
                     user.money += self.money
+                    user.exp += self.exp
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -84,7 +105,10 @@ class GoldCoinTreasureChest():
                 if choice == "1":
                     print("你全神贯注的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    cprint(f"你已增加经验: {self.exp}点", "cyan")
+                    sound_play(random.choice(settings.sounds["coins"]))
                     user.money += self.money
+                    user.exp += self.exp
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -98,7 +122,10 @@ class GoldCoinTreasureChest():
                 if choice == "1":
                     print("你欣喜若狂的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    cprint(f"你已增加经验: {self.exp}点", "cyan")
+                    sound_play(random.choice(settings.sounds["coins"]))
                     user.money += self.money
+                    user.exp += self.exp
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -112,7 +139,10 @@ class GoldCoinTreasureChest():
                 if choice == "1":
                     print("你颤抖着的打开宝箱")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    cprint(f"你已增加经验: {self.exp}点", "cyan")
+                    sound_play(random.choice(settings.sounds["coins"]))
                     user.money += self.money
+                    user.exp += self.exp
                     break
                 elif choice == "2":
                     cprint("(也许不打开是个明智之举)", "yellow")
@@ -127,10 +157,14 @@ class GoldCoinTreasureChest():
                     print("你打开宝箱")
                     print("仿佛一切都是无穷的")
                     cprint(f"恭喜你获得{self.money}元", "yellow")
+                    cprint(f"你已增加经验: {self.exp}点", "cyan")
+                    sound_play(random.choice(settings.sounds["coins"]))
                     user.money += self.money
+                    user.exp += self.exp
                     break
                 elif choice == "2":
                     cprint("amo4372:我替你感到悲伤", "yellow")
                     break
                 else:
                     cprint("(错误的选项)", "red")
+        time.sleep(2)

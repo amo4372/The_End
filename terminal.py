@@ -41,18 +41,20 @@ class Terminal():
                 try:
                     max = int(self.command.split()[2])
                     if max >= 0:
-                        for i in range(max):
-                            if map.map[user.pos + i]:
-                                print(map.map[user.pos + i].id, end=", ")
-                            else:
-                                print("None", end=", ")
+                        for j in range(max):
+                            for i in range(max):
+                                if map.map[user.x + i][user.y + j]:
+                                    print(map.map[user.x + i][user.y + j].id, end=", ")
+                                else:
+                                    print("None", end=", ")
                         print("\n")
                     else:
-                        for i in range(max * -1):
-                            if map.map[user.pos - i]:
-                                print(map.map[user.pos - i].id, end=", ")
-                            else:
-                                print("None", end=", ")
+                        for j in range(max):
+                            for i in range(max):
+                                if map.map[user.x + i][user.y + j]:
+                                    print(map.map[user.x + i][user.y + j].id, end=", ")
+                                else:
+                                    print("None", end=", ")
                         print("\n")
                 except IndexError:
                     pass
@@ -62,3 +64,4 @@ class Terminal():
                 error_return.ErrorCommand()
         except IndexError:
             error_return.CommandLost()
+        del j, i, error_return, user, map

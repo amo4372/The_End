@@ -6,10 +6,10 @@ from playmusic import *
 import settings
 import store_files
 
-def set_settings(user, map, oper_time):
-    clear_screen()
-    cprint("--菜单--", "white", "on_black", ["bold","dark"])
+def set_settings(user, map, oper_time, thread_died_event):
     while True:
+        clear_screen()
+        cprint("--菜单--", "white", "on_black", ["bold","dark"])
         choice = input("1.保存游戏\n2.返回\n3.选项\n4.退出")
         if choice == "1":
             store_files.store_file(user, map, oper_time)
@@ -33,6 +33,7 @@ def set_settings(user, map, oper_time):
                 else:
                     cprint("(错误的选项)", "red")
         elif choice == "4":
-            sys.exit(0)
+            thread_died_event.set()
+            sys.exit()
         else:
             cprint("(错误的选项)")

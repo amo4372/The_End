@@ -16,8 +16,9 @@ class TransactionSite():
         for i in range(random.randint(1,len(settings.items_list))):
             self.items_list.append(random.choice(settings.items_list))
     def pri(self, user):
+        clear_screen()
         cprint("欢迎来到交易站点", "cyan")
-        time.sleep(2)
+        time.sleep(1)
         cprint("(买点什么东西吧)", "yellow")
         time.sleep(1)
         self.buy(user)

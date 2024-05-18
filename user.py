@@ -2,8 +2,10 @@
 import random
 import settings
 import time
+import weapons
 from termcolor import *
 from clear_screen import clear_screen
+from playmusic import play, stop
 
 class User():
     """掌管玩家的基本数据和基本行为的类"""
@@ -16,7 +18,8 @@ class User():
                 nq_e = 0,
                 e_ate = None,
                 q_ate = None,
-                pos = 0,
+                x = 0,
+                y = 0,
                 money = 0,
                 level = 1,
                 role_level = 1,
@@ -32,6 +35,7 @@ class User():
                 ktkx = 0.2, 
                 bjl = 0.01,
                 bj_damage = 0.01,
+                weapon = random.choice(weapons.InitWeapons),
                 bag = [],
                 csp = 1.5,
                 choice = None,
@@ -49,7 +53,8 @@ class User():
         self.ne = ne
         self.q_e = q_e
         self.nq_e = nq_e
-        self.pos = pos
+        self.x = x
+        self.y = y
         self.money = money
         self.level = level
         self.role_level = role_level
@@ -66,12 +71,13 @@ class User():
         self.bjl = bjl
         self.bj_damage = bj_damage
         self.bag = bag
+        self.weapon = weapon
         self.csp = csp
         self.choice = choice
         self.s = s
     def move(self):
         """掌管玩家行动的模块"""
-        self.choice = input("往前走还是往后走(1.前\t2.后)")
+        self.choice = input("往前走还是往后走,还是左右(1.前 2.后 3.左 4.右)")
         if self.choice == "1":
             while True:
                 try:
@@ -84,11 +90,11 @@ class User():
                 print(colored("(请输入整百数)", "red"))
                 self.move()
             else:
-                if self.pos + (self.s // 100) < 0:
+                if self.x + (self.s // 100) > 99:
                     cprint("不行, 那里根本走不了", "red")
                     self.move()
                 else:
-                    self.pos += self.s // 100
+                    self.x += self.s // 100
                 if self.sp <= self.s / 100 /  self.speed * self.csp:
                     print(colored("不行,我撑不了那么久", "red"))
                     self.move()
@@ -107,11 +113,57 @@ class User():
                 print(colored("(请输入整百数)", "red"))
                 self.move()
             else:
-                if self.pos - (self.s // 100) < 0:
+                if self.x - (self.s // 100) < 0:
                     cprint("不行, 那里根本走不了", "red")
                     self.move()
                 else:
-                    self.pos -= self.s // 100
+                    self.x -= self.s // 100
+                if self.sp <= self.s / 100 /  self.speed * self.csp:
+                    print(colored("不行,我撑不了那么久", "red"))
+                    self.move()
+                else:
+                    self.sp -= self.s / 100 / self.speed * self.csp
+                    self.exp += self.s / 100 * self.speed
+        elif self.choice == "3":
+            while True:
+                try:
+                    self.s = int(input("走多远呢?(请输入整百数)"))
+                except:
+                    print(colored("(错误的选项)", "red"))
+                else:
+                    break
+            if self.s % 100 != 0:
+                print(colored("(请输入整百数)", "red"))
+                self.move()
+            else:
+                if self.y - (self.s // 100) < 0:
+                    cprint("不行, 那里根本走不了", "red")
+                    self.move()
+                else:
+                    self.y -= self.s // 100
+                if self.sp <= self.s / 100 /  self.speed * self.csp:
+                    print(colored("不行,我撑不了那么久", "red"))
+                    self.move()
+                else:
+                    self.sp -= self.s / 100 / self.speed * self.csp
+                    self.exp += self.s / 100 * self.speed
+        elif self.choice == "4":
+            while True:
+                try:
+                    self.s = int(input("走多远呢?(请输入整百数)"))
+                except:
+                    print(colored("(错误的选项)", "red"))
+                else:
+                    break
+            if self.s % 100 != 0:
+                print(colored("(请输入整百数)", "red"))
+                self.move()
+            else:
+                if self.y + (self.s // 100) > 99:
+                    cprint("不行, 那里根本走不了", "red")
+                    self.move()
+                else:
+                    self.y += self.s // 100
                 if self.sp <= self.s / 100 /  self.speed * self.csp:
                     print(colored("不行,我撑不了那么久", "red"))
                     self.move()
@@ -172,12 +224,16 @@ class User():
     def mat(self):
         """检测玩家精神状态"""
         if self.sp / 100 >= 0.7:
+            stop()
             return colored("优秀", "green")
         elif self.sp / 100 >= 0.5:
+            play(settings.sounds["noises"][0])
             return colored("良好", "yellow")
         elif self.sp / 100 >= 0.2:
+            play(settings.sounds["noises"][1])
             return colored("糟糕", "grey")
         else:
+            play(settings.sounds["noises"][2])
             return colored("疯狂", "red")
     def use(self):
         """使用玩家背包道具"""
@@ -226,15 +282,15 @@ class User():
                             self.nq_e += self.bag[choice - 1]["QE"]
                         self.speed += self.bag[choice - 1]["SPEED"]
                         self.bag.pop(choice - 1)
-                        time.sleep(1)
+                        time.sleep(2)
                         clear_screen()
     def uplevel(self):
         """玩家升级"""
         if self.exp >= settings.EXP[self.level - 1]:
             clear_screen()
             cprint(f"恭喜你已升级 Lv.{self.level} -> Lv.{self.level + 1}", "light_cyan")
-            self.level += 1
             self.exp -= settings.EXP[self.level - 1]
+            self.level += 1
             if self.sp >= 100:
                 self.sp += 20
             else:
@@ -249,8 +305,8 @@ class User():
         """玩家查看自己的等级"""
         clear_screen()
         cprint(f"距离下一次(Lv.{self.level} -> Lv.{self.level + 1})升级还剩:", "cyan")
-        print(colored("--" * round(self.exp / settings.EXP[self.level] * 10), "light_cyan"), "--" * round((settings.EXP[self.level] - self.exp) / settings.EXP[self.level] * 10))
-        cprint(f"{int(self.exp)} / {settings.EXP[self.level]}", "light_cyan")
+        print(f'{colored("--" * round(self.exp / settings.EXP[self.level - 1] * 10), "light_cyan")}{"--" * round((settings.EXP[self.level - 1] - self.exp) / settings.EXP[self.level - 1] * 10)}  {round(self.exp / settings.EXP[self.level - 1] * 100, 3)}%')
+        cprint(f"{int(self.exp)} / {settings.EXP[self.level - 1]}", "light_cyan")
         time.sleep(3)
     def up_role_pri(self):
         cprint("角色详情:", "green")

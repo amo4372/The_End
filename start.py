@@ -10,60 +10,61 @@ import store_files
 username = ""
 
 def start():
-    clear_screen()
-    print(colored("\tThe End","white","on_black",["bold","dark"]))
-    play("music/The_End.wav")
-    choice = input("\t1.开始游戏\n\t2.选项\n\t3.详情\n\t4.退出\n\t")
-    if choice == "1":
-        choice_1 = input("1.新游戏\t2.继续游戏\t3.返回")
-        if choice_1 == "1":
-            clear_screen()
-            stop()
-            start_plot()
-            return -1
-        elif choice_1 == "2":
-            answer = store_files.read_file()
-            if answer == -1:
-                start()
-            else:
-                user, map, oper_time = answer
-                stop()
-                return user, map, oper_time
-        elif choice_1 == "3":
-            start()
-        else:
-            print(colored("(错误的选项)", "red"))
-            start()
-    elif choice == "2":
-        while True:
-            choice_1 = input("1.音乐")
+    while True:
+        clear_screen()
+        print(colored("\tThe End","white","on_black",["bold","dark"]))
+        play("music/The_End.wav")
+        choice = input("\t1.开始游戏\n\t2.选项\n\t3.详情\n\t4.退出\n\t")
+        if choice == "1":
+            choice_1 = input("1.新游戏\t2.继续游戏\t3.返回")
             if choice_1 == "1":
-                choice_2 = input("是否关闭音乐1.开\t2.关")
-                if choice_2 == "1":
-                    settings.play_music_state = False
+                clear_screen()
+                stop()
+                start_plot()
+                return -1
+            elif choice_1 == "2":
+                answer = store_files.read_file()
+                if answer == -1:
+                    pass
+                else:
+                    user, map, oper_time = answer
                     stop()
-                    start()
-                    break
-                elif choice_2 == "2":
-                    settings.play_music_state = True
-                    start()
-                    break
+                    return user, map, oper_time
+            elif choice_1 == "3":
+                pass
+            else:
+                print(colored("(错误的选项)", "red"))
+                start()
+        elif choice == "2":
+            while True:
+                choice_1 = input("1.音乐")
+                if choice_1 == "1":
+                    choice_2 = input("是否关闭音乐1.开\t2.关")
+                    if choice_2 == "1":
+                        settings.play_music_state = False
+                        stop()
+                        pass
+                        break
+                    elif choice_2 == "2":
+                        settings.play_music_state = True
+                        pass
+                        break
+                    else:
+                        cprint("(错误的选项)", "red")
                 else:
                     cprint("(错误的选项)", "red")
-            else:
-                cprint("(错误的选项)", "red")
-    elif choice == "3":
-        print("--作者:amo4372--")
-        print(settings.version)
-        time.sleep(2)
-        choice_1 = input("是否返回上一级(按任意键即可)")
-        if choice_1 != None:
-            start()
-    elif choice == "4":
-        sys.exit(0)
-    else:
-        print(colored("(错误的选项)", "red"))
-        start()
+        elif choice == "3":
+            print("--作者:amo4372--")
+            print(settings.version)
+            time.sleep(2)
+            choice_1 = input("是否返回上一级(按任意键即可)")
+            if choice_1 != None:
+                pass
+        elif choice == "4":
+            sys.exit(0)
+        else:
+            print(colored("(错误的选项)", "red"))
+            pass
 def start_plot():
     global username
     print(colored("(警报声)", "red"))
@@ -86,7 +87,12 @@ def start_plot():
         choice = input("跳过(1.是  2.否)")
         if choice == "1":
             clear_screen()
-            username = input(colored("(该取什么名字呢?)", "yellow"))
+            while True:
+                username = input(colored("(该取什么名字呢?)", "yellow"))
+                if username:
+                    break
+                else:
+                    cprint("用户名非空！", "red")
             clear_screen()
             break
         elif choice == "2":
@@ -117,7 +123,12 @@ def start_plot():
             cprint(plot_watch_list[2], "green")
             time.sleep(2)
             cprint(plot_list[6], "yellow")
-            username = input(colored("(该取什么名字呢?)", "yellow"))
+            while True:
+                username = input(colored("(该取什么名字呢?)", "yellow"))
+                if username:
+                    break
+                else:
+                    cprint("用户名非空！", "red")
             clear_screen()
             break
         else:
