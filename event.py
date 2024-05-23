@@ -54,6 +54,9 @@ def event():
             elif map.if_map(user.x, user.y) == -5:
                 map.map[user.x][user.y].pri(user)
                 map.map[user.x][user.y] = None
+            elif map.if_map(user.x, user.y) == -6:
+                map.map[user.x][user.y].pri(user)
+                map.map[user.x][user.y] = None
             user.pri(int(oper_time.game_time_list[2]), oper_time.if_time(), oper_time.cget_time())
             answer = user.move()
             if answer == -1:

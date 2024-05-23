@@ -9,6 +9,7 @@ from gold_coin_treasure_chest import GoldCoinTreasureChest as GCTC
 from safe_site import SafeSite
 from transaction_site import TransactionSite as TS
 from backtracking_site import BacktrackingSite as BS
+from distance_movement_site import DistanceMovementSite as DMS
 from oper_time import OperTime
 from user import User
 from map import Map
@@ -101,6 +102,8 @@ def _store_map(f, map):
             elif type(i) == TS:
                 store_map.append(i.__dict__)
             elif type(i) == BS:
+                store_map.append(i.__dict__)
+            elif type(i) == DMS:
                 store_map.append(i.__dict__)
         store_big_map.append(store_map)
     f.write(json.dumps(store_big_map))
@@ -290,6 +293,8 @@ def _read_map(file):
                 map.map[j].append(TS(**i))
             elif i["id"] == "BS":
                 map.map[j].append(BS(**i))
+            elif i["id"] == "DMS":
+                map.map[j].append(DMS(**i))
     del i, j, read_map, file, list_items
     return map
 def _read_oper_time(file):

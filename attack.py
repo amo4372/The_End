@@ -9,6 +9,7 @@ import weapons
 damage = 0
 
 def attack_manage(user, role, role_map):
+    """管理各类攻击任务的模块"""
     if user.weapon["SPEED"] <= 0:
         user.weapon["SPEED"] = user.weapon["SPEED_MAX"]
     attack_pri(user, role)
@@ -17,6 +18,7 @@ def attack_manage(user, role, role_map):
         if not user.weapon["BULLETS"] < 0:
             state = attack_user_input(user, role)
         else:
+            state = True
             user.weapon["BULLETS"] = user.weapon["BULLET_MAX"]
             cprint("怎么没子弹了?(装弹中...)", "yellow")
     else:
@@ -32,10 +34,13 @@ def attack_manage(user, role, role_map):
         role_map[user.x][user.y] = None
         print(f"{role.name}死了")
         user.money += role.money
+        user.exp += role.exp
         print(f"你已获得", colored(f"{role.money}元", "yellow"))
+        cprint(f"已获得经验 {role.exp}", "light_cyan")
         return 0
-
+    
 def attack_user_input(user, role):
+    """管理玩家的攻击的模块"""
     global damage
     e = False
     q = False
@@ -125,7 +130,9 @@ def AT_Attack(user, role, role_map):
                         role_map[user.x][user.y] = None
                         print(f"{role.name}死了")
                         user.money += role.money
+                        user.exp += role.exp
                         print(f"你已获得", colored(f"{role.money}元", "yellow"))
+                        cprint(f"已获得经验 {role.exp}", "light_cyan")
                         break
                 break
         elif choice == "2":
@@ -141,7 +148,9 @@ def AT_Attack(user, role, role_map):
                         role_map[user.x][user.y] = None
                         print(f"{role.name}死了")
                         user.money += role.money
+                        user.exp += role.exp
                         print(f"你已获得", colored(f"{role.money}元", "yellow"))
+                        cprint(f"已获得经验 {role.exp}", "light_cyan")
                         break
                 break
             else:
@@ -153,7 +162,9 @@ def AT_Attack(user, role, role_map):
                         role_map[user.x][user.y] = None
                         print(f"{role.name}死了")
                         user.money += role.money
+                        user.exp += role.exp
                         print(f"你已获得", colored(f"{role.money}元", "yellow"))
+                        cprint(f"已获得经验 {role.exp}", "light_cyan")
                         break
                 break
         else:
@@ -162,7 +173,7 @@ def attack(user, role):
     """掌管普攻的模块"""
     damage_type = ""
     if type(user) == User:
-        damage = (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.kx) * 0.8
+        damage = (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.kx) * (0.8 + user.weapon["APM"])
         if random.randint(0, 1000) <= user.bjl * 1000:
             damage = damage * (1 + user.bj_damage + user.weapon["BJ_DAMAGE"])
             damage_type = "暴击"
@@ -174,6 +185,10 @@ def attack(user, role):
     role.nhp -= damage
     if type(user) == User and user.ne < user.e:
         user.ne += user.e * user.e_ate["E"]
+        user.nhp += damage * user.weapon["REPLY_HP"]
+        user.sp += damage * user.weapon["REPLY_SP"]
+        if user.nhp > user.hp:
+            user.nhp = user.hp
     if damage < 0:
         damage = 0
     if role.nhp < 0:
@@ -188,7 +203,7 @@ def e_attack(user, role):
     """掌管技能的模块"""
     damage_type = ""
     if user.e_ate["ATE"] == settings.ATE[0]:
-        damage = user.e_ate["FY"] * user.e_ate["APM"] * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.hkx)
+        damage = user.e_ate["FY"] * (user.weapon["APM"] + user.e_ate["APM"]) * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.hkx)
     elif user.e_ate["ATE"] == settings.ATE[1]:
         damage = user.e_ate["FY"] * user.e_ate["APM"] * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.ktkx)
     if random.randint(0, 1000) <= user.bjl * 1000:
@@ -203,16 +218,20 @@ def e_attack(user, role):
         damage = 0
     if role.nhp < 0:
         role.nhp = 0
+    user.nhp += damage * user.weapon["REPLY_HP"]
+    user.sp += damage * user.weapon["REPLY_SP"]
+    if user.nhp > user.hp:
+        user.nhp = user.hp
     print(colored(f"你已释放技能: {user.e_ate['NAME']}", "yellow"))
     print(f"已减少", colored(f"技能能量{round(user.e * user.e_ate['E'] / user.e * 100, 3)}%", "magenta"))
-    print(f"{user.name}已使用{user.weapon['NAME']}对{role.name}造成 {colored(f'{user.e_ate["FY"]}段', 'red')}{user.e_ate['ATE']}{colored(damage_type, 'red')}{colored(f'伤害:{round(damage, 2)}', 'red')}")
+    print(f"{user.name}已使用{user.weapon['NAME']}对{role.name}造成" + colored(f'{user.e_ate["FY"]}段', 'red') + user.e_ate['ATE'] + colored(damage_type, 'red') + colored(f'伤害:{round(damage, 2)}', 'red'))
     print("--------------------")
     time.sleep(2)
 def q_attack(user, role):
     """掌管大招技能的模块"""
     damage_type = ""
     if user.q_ate["ATE"] == settings.ATE[0]:
-        damage = user.q_ate["FY"] * user.q_ate["APM"] * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.hkx)
+        damage = user.q_ate["FY"] * (user.weapon["APM"] + user.q_ate["APM"]) * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.hkx)
     elif user.q_ate["ATE"] == settings.ATE[1]:
         damage = user.q_ate["FY"] * user.q_ate["APM"] * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.ktkx)
     if random.randint(0, 1000) <= user.bjl * 1000:
@@ -224,16 +243,21 @@ def q_attack(user, role):
         damage = 0
     if role.nhp < 0:
         role.nhp = 0
+    user.nhp += damage * user.weapon["REPLY_HP"]
+    user.sp += damage * user.weapon["REPLY_SP"]
+    if user.nhp > user.hp:
+        user.nhp = user.hp
     print(colored(f"你已释放大招: {user.q_ate['NAME']}", "yellow"))
-    print(f"{user.name}已使用{user.weapon['NAME']}对{role.name}造成 {colored(f'{user.q_ate["FY"]}段', 'cyan')}{user.q_ate['ATE']}{colored(damage_type, 'red')}{colored(f'伤害:{round(damage, 2)}', 'red')}")
+    print(f"{user.name}已使用{user.weapon['NAME']}对{role.name}造成" + colored(f'{user.q_ate["FY"]}段', 'cyan') + user.q_ate['ATE'] + colored(damage_type, 'red') + colored(f'伤害:{round(damage, 2)}', 'red'))
     print("--------------------")
     time.sleep(2)
 def attack_pri(user, role):
+    """对一些战斗所需的数据进行报告的模块"""
     clear_screen()
     print("我方生命值:" + colored("--" * round(user.nhp / user.hp * 10), "green") + colored("--" * round((user.hp - user.nhp) / user.hp * 10)) + colored(f"{round(user.nhp / user.hp * 100, 3)}%", "green"))
     print("敌方生命值:" + colored("--" * round(role.nhp / role.hp * 10), "red") + colored("--" * round((role.hp - role.nhp) / role.hp * 10)) + colored(f"{round(role.nhp / role.hp * 100, 3)}%", "red"))
     print(colored(f"当前技能能量:{round(user.ne / user.e * 100 ,3)}%", "magenta"), colored(f"当前大招能量:{round(user.nq_e / user.q_e * 100 ,3)}%", "yellow"))
     if user.weapon["TYPE"] == weapons.Weapons_Type[0]:    
-        print(f"当前武器：{user.weapon['NAME']} 子弹:{user.weapon["BULLETS"]} / {user.weapon["BULLET_MAX"]}")
+        print(f"当前武器：{user.weapon['NAME']} 子弹:{user.weapon['BULLETS']} / {user.weapon['BULLET_MAX']}")
     else:
         print(f"当前武器：{user.weapon['NAME']}")

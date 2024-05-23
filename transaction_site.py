@@ -44,22 +44,27 @@ class TransactionSite():
                 cprint("(错误的选项)", "red")
             else:
                 if choice.lower() != "q":
-                    choice = int(choice)
-                    if choice > i and choice <= 0:
+                    try:
+                        choice = int(choice)
+                    except:
                         cprint("(错误的选项)", "red")
                         time.sleep(1)
                     else:
-                        if user.money < self.items_list[choice - 1]["PRICE"]:
-                            cprint("你的钱恐怕不够哦", "cyan")
+                        if choice > i and choice <= 0:
+                            cprint("(错误的选项)", "red")
                             time.sleep(1)
                         else:
-                            user.bag.append(self.items_list[choice - 1])
-                            cprint(f"你已购买{self.items_list[choice - 1]['NAME']}", "cyan")
-                            cprint(f"你已扣除{self.items_list[choice - 1]['PRICE']}元", "cyan")
-                            time.sleep(2)
-                            user.money -= self.items_list[choice - 1]["PRICE"]
-                            self.items_list.pop(choice - 1)
-                            time.sleep(2)
+                            if user.money < self.items_list[choice - 1]["PRICE"]:
+                                cprint("你的钱恐怕不够哦", "cyan")
+                                time.sleep(1)
+                            else:
+                                user.bag.append(self.items_list[choice - 1])
+                                cprint(f"你已购买{self.items_list[choice - 1]['NAME']}", "cyan")
+                                cprint(f"你已扣除{self.items_list[choice - 1]['PRICE']}元", "cyan")
+                                time.sleep(2)
+                                user.money -= self.items_list[choice - 1]["PRICE"]
+                                self.items_list.pop(choice - 1)
+                                time.sleep(2)
                 else:
                     cprint("GoodBye", "cyan")
                     time.sleep(2)

@@ -2,7 +2,7 @@ from termcolor import *
 
 NoneType = type(None)
 
-version = "v0.0.1.5_051824_2202"
+version = "v0.0.1.7_240523"
 
 play_music_state = True
 
@@ -14,6 +14,14 @@ Reply_Sp_Drug = {"id":"ReplyDrug","NAME":"精神药物" ,"PRICE":100, "HP":0, "S
 Reply_E_Drug = {"id":"ReplyDrug","NAME":"功能饮料" ,"PRICE":150, "HP":0, "SP":0, "E":15, "QE":0, "SPEED":0}
 Reply_Qe_Drug = {"id":"ReplyDrug","NAME":"加强版功能饮料", "PRICE":200,"HP":0, "SP":0, "E":0, "QE":15, "SPEED":0}
 Reply_Speed_Drug = {"id":"ReplyDrug","NAME":"肾上腺素" ,"PRICE":250, "HP":0, "SP":0, "E":0, "QE":0, "SPEED":0.25}
+
+Distance_Movement_Level = ["R", colored("SSR", "light_magenta"), colored("U", "light_green"), colored("WZ", "light_blue")]
+
+Permanent_Distance_Movement = 160 #常驻跃迁所需花费
+
+UP_Distance_Movement = 200 #UP跃迁所需花费
+
+Star_Search_Distance_Movement = 500 #探星跃迁所需花费
 
 EXP = [value ** 2 for value in range(10,110)]
 

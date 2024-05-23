@@ -4,6 +4,7 @@ from backtracking_site import BacktrackingSite as BS
 from gold_coin_treasure_chest import GoldCoinTreasureChest as GCTC
 from safe_site import SafeSite
 from transaction_site import TransactionSite as TS
+from distance_movement_site import DistanceMovementSite as DMS
 from clear_screen import clear_screen
 import oper_time
 
@@ -18,8 +19,8 @@ class Map():
     def __init__(self):
         self.width = 100
         self.height = 100
-        self.Fprob_dict = {"None":10000, "AR1":1000 ,"GCTC":700,"TS":600,"AR2":100 ,"SafeSite":200, "BS":60}
-        #万分数的字典,分别是100%, 10%, 7%, 6%, 1%, 2%, 0.6%
+        self.Fprob_dict = {"None":5000, "AR1":1500 ,"GCTC":1100,"TS":500, "SafeSite":450, "DMS": 350, "AR2":200,"BS":100}
+        #万分数的字典,分别是55%, 18%, 11%, 5%, 4.5%, 3.5%, 2%, 1%
         self.j = 0
         self.map = []
         for j in range(self.width * 10):
@@ -29,33 +30,29 @@ class Map():
         for self.j in range(self.width * 10):
             for i in range(self.height * 10):
                 self.prob = random.randint(0, 10000)
-                if self.prob <= self.Fprob_dict["BS"]:
-                    i = BS()
-                    self.map[self.j].append(i)
-                    continue
-                if self.prob <= self.Fprob_dict["AR2"]:
-                    i = AttackRole2()
-                    self.map[self.j].append(i)
-                    continue
-                if self.prob <= self.Fprob_dict["SafeSite"]:
-                    i = SafeSite()
-                    self.map[self.j].append(i)
-                    continue
-                if self.prob <= self.Fprob_dict["TS"]:
-                    i = TS()
-                    self.map[self.j].append(i)
-                    continue
-                if self.prob <= self.Fprob_dict["GCTC"]:
-                    i = GCTC()
-                    self.map[self.j].append(i)
-                    continue
-                if self.prob <= self.Fprob_dict["AR1"]:
-                    i = AttackRole1()
-                    self.map[self.j].append(i)
-                    continue
                 if self.prob <= self.Fprob_dict["None"]:
                     self.map[self.j].append(None)
-                    continue
+                elif self.prob - self.Fprob_dict["None"] <= self.Fprob_dict["AR1"]:
+                    i = AttackRole1()
+                    self.map[self.j].append(i)
+                elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] <= self.Fprob_dict["GCTC"]:
+                    i = GCTC()
+                    self.map[self.j].append(i)
+                elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] <= self.Fprob_dict["TS"]:
+                    i = TS()
+                    self.map[self.j].append(i)
+                elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] - self.Fprob_dict["TS"] <= self.Fprob_dict["SafeSite"]:
+                    i = SafeSite()
+                    self.map[self.j].append(i)
+                elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] - self.Fprob_dict["TS"] - self.Fprob_dict["SafeSite"] <= self.Fprob_dict["DMS"]:
+                    i = DMS()
+                    self.map[self.j].append(i)
+                elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] - self.Fprob_dict["TS"] - self.Fprob_dict["SafeSite"] - self.Fprob_dict["DMS"] <= self.Fprob_dict["AR2"]:
+                    i = AttackRole2()
+                    self.map[self.j].append(i)
+                else:
+                    i = BS()
+                    self.map[self.j].append(i)
         i = SafeSite()
         self.map[0][0] = i
         del i
@@ -68,7 +65,8 @@ class Map():
         -3 = SafeSite
         -4 = TS
         -5 = BS
-        -6 = None
+        -6 = DMS
+        -7 = None
         """
         if type(self.map[x][y]) == AttackRole1:
             return -1
@@ -80,8 +78,10 @@ class Map():
             return -4
         elif type(self.map[x][y]) == BS:
             return -5
-        elif type(self.map[x][y]) == NoneType:
+        elif type(self.map[x][y]) == DMS:
             return -6
+        elif type(self.map[x][y]) == NoneType:
+            return -7
         del x, y
     def see(self, x, y, time_type):
         if time_type == oper_time.TimeType[0]:
@@ -115,6 +115,10 @@ class Map():
                     cprint(f"(前面{i * 100}m好像有什么东西矗立着)", "magenta")
                     time.sleep(0.5)
                     break
+                elif self.if_map(x + i, y) == -6:
+                    cprint(f"(前面{i * 100}m好像有什么东西矗立着)", "light_blue")
+                    time.sleep(0.5)
+                    break
         except IndexError:
             pass
         
@@ -139,6 +143,10 @@ class Map():
                     break
                 elif self.if_map(x - i, y) == -5:
                     cprint(f"(后面{i * 100}m好像有什么东西矗立着)", "magenta")
+                    time.sleep(0.5)
+                    break
+                elif self.if_map(x - i, y) == -6:
+                    cprint(f"(后面{i * 100}m好像有什么东西矗立着)", "light_blue")
                     time.sleep(0.5)
                     break
         except IndexError:
@@ -166,6 +174,10 @@ class Map():
                     cprint(f"(左面{i * 100}m好像有什么东西矗立着)", "magenta")
                     time.sleep(0.5)
                     break
+                elif self.if_map(x, y - i) == -6:
+                    cprint(f"(左面{i * 100}m好像有什么东西矗立着)", "light_blue")
+                    time.sleep(0.5)
+                    break
         except IndexError:
             pass
         try:
@@ -189,6 +201,10 @@ class Map():
                     break
                 elif self.if_map(x, y + i) == -5:
                     cprint(f"(右面{i * 100}m好像有什么东西矗立着)", "magenta")
+                    time.sleep(0.5)
+                    break
+                elif self.if_map(x, y + i) == -6:
+                    cprint(f"(右面{i * 100}m好像有什么东西矗立着)", "light_blue")
                     time.sleep(0.5)
                     break
         except IndexError:
@@ -215,6 +231,7 @@ class Map():
         self.GCTC = 0
         self.AR1 = 0
         self.AR2 = 0
+        self.DMS = 0
         self.none = 0
         for j in self.map:
             for i in j:
@@ -224,6 +241,8 @@ class Map():
                     self.TS += 1
                 elif type(i) == BS:
                     self.BS += 1
+                elif type(i) == DMS:
+                    self.DMS += 1
                 elif type(i) == GCTC:
                     self.GCTC += 1
                 elif type(i) == AttackRole1:
@@ -232,9 +251,11 @@ class Map():
                     self.AR2 += 1
                 else:
                     self.none += 1
-        print(f"SafeSite: {self.SafeSite}\tTS: {self.TS}\nBS: {self.BS}\tGCTC: {self.GCTC}\nAR1: {self.AR1}\tAR2: {self.AR2}\nNone: {self.none}")
+        print(f"SafeSite: {self.SafeSite}\tTS: {self.TS}\nBS: {self.BS}\tDMS: {self.DMS}\nGCTC: {self.GCTC}\tAR1: {self.AR1}\nAR2: {self.AR2}\tNone: {self.none}")
 if __name__ == "__main__":
-    map = Map()
-    map.run()
-    print(f"\n{sys.getsizeof(map.map)}")
-    map._get_map()
+    while True:
+        map = Map()
+        map.run()
+        print(f"\n{sys.getsizeof(map.map)}")
+        map._get_map()
+        time.sleep(3)

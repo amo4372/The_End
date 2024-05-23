@@ -38,6 +38,9 @@ class User():
                 weapon = random.choice(weapons.InitWeapons),
                 bag = [],
                 csp = 1.5,
+                pdm = 0,
+                udm = 0,
+                ssdm = 0,
                 choice = None,
                 s = None
             ):
@@ -73,6 +76,9 @@ class User():
         self.bag = bag
         self.weapon = weapon
         self.csp = csp
+        self.pdm = pdm
+        self.udm = udm
+        self.ssdm = ssdm
         self.choice = choice
         self.s = s
     def move(self):
@@ -311,24 +317,71 @@ class User():
     def up_role_pri(self):
         cprint("角色详情:", "green")
         cprint(f"\t角色名: {self.name}", "green")
-        cprint(f"角色等级: Lv.{self.role_level}", "green")
+        cprint(f"\t角色等级: Lv.{self.role_level}", "green")
         cprint(f"\t角色命途: {self.ate}", "green")
-        cprint(f"\t角色生命值上限: {self.hp}\n\t角色攻击力: {self.ap}\n\t角色击破效率: {self.kxjp * 100}%\n\t角色物理抗性: {self.kx * 100}%\n\t角色湮灭伤害抗性: {self.hkx * 100}%\n\t角色跃迁伤害抗性: {self.ktkx * 100}%", "green")
+        cprint(f"\t角色生命值上限: {self.hp}\n\t角色攻击力: {self.ap}\n\t角色暴击率: {self.bjl * 100}%\n\t角色暴击伤害: {self.bj_damage * 100}%\n\t角色击破效率: {self.kxjp * 100}%\n\t角色物理抗性: {self.kx * 100}%\n\t角色湮灭伤害抗性: {self.hkx * 100}%\n\t角色跃迁伤害抗性: {self.ktkx * 100}%", "green")
+        cprint(f"----------", "green")
+        cprint(f"武器详情:", "green")
+        cprint(f"\t武器类型: {self.weapon['TYPE']}", "green")
+        cprint(f"\t武器名: {self.weapon['NAME']}", "green")
+        cprint(f"\t武器等级: Lv.{self.weapon['LEVEL']}", "green")
+        cprint(f"\t武器攻击力: {self.weapon['AP']}\n\t武器攻击力加成: {self.weapon['APM'] * 100}%\n\t武器暴击率: {self.weapon['BJL'] * 100}%\n\t武器暴击伤害: {self.weapon['BJ_DAMAGE'] * 100}%\n\t武器回复血量: {self.weapon['REPLY_HP'] * 100}%\n\t武器恢复精神: {self.weapon['REPLY_SP'] * 100}%\n\t武器抗性击破效率: {self.weapon['KXJP'] * 100}%", "green")
         while True:
-            if self.money >= settings.Up_Money[self.role_level - 1]:
-                cprint("是否升级?1.是\t2.否", "green")
-                choice = input(" ")
+            try:
+                choice = input(colored("1.角色升级\t2.武器升级\tq.返回 ", "green"))
                 if choice == "1":
-                    self.money -= settings.Up_Money[self.role_level - 1]
-                    self.up_role_level()
-                    cprint("已升级！")
+                    if self.money >= settings.Up_Money[self.role_level - 1]:
+                        if self.up_role_level_pri() == -1:
+                            break
+                    else:
+                        while True:
+                            try:
+                                choice_1 = input("(按任意键返回)")
+                                if choice_1:
+                                    break
+                            except (EOFError, KeyboardInterrupt):
+                                cprint("(错误的选项)", "red")
+                                time.sleep(1)
+                        break
                 elif choice == "2":
+                    if self.money >= settings.Up_Money[self.weapon['LEVEL'] - 1]:
+                        if self.up_weapon_level_pri() == -1:
+                            break
+                elif choice.lower() == "q":
                     break
-                else:
-                    cprint("(错误的选项)", "red")
-            else:
-                break
-            time.sleep(2)
+            except (EOFError, KeyboardInterrupt):
+                cprint("(错误的选项)", "red")
+    def up_role_level_pri(self):
+        clear_screen()
+        cprint("角色是否升级?1.是\t2.否", "green")
+        choice = input(" ")
+        if choice == "1":
+            self.money -= settings.Up_Money[self.role_level - 1]
+            self.up_role_level()
+            cprint("已升级！")
+            time.sleep(1)
+        elif choice == "2":
+            return -1
+        else:
+            cprint("(错误的选项)", "red")
+            time.sleep(1)
+    def up_weapon_level_pri(self):
+        clear_screen()
+        cprint("武器是否升级?1.是\t2.否", "green")
+        choice = input(" ")
+        if choice == "1":
+            self.money -= settings.Up_Money[self.weapon["LEVEL"] - 1]
+            self.up_weapon_level()
+            cprint("已升级！")
+            time.sleep(1)
+        elif choice == "2":
+            return -1
+        else:
+            cprint("(错误的选项)", "red")
+            time.sleep(1)
+    def up_weapon_level(self):
+        self.weapon["LEVEL"] += 1
+        self.weapon["AP"] = self.weapon["LAP"] * self.weapon["LEVEL"]
     def up_role_level(self):
         self.role_level += 1
         self.hp = 100 * self.role_level

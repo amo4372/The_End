@@ -8,6 +8,7 @@ class AttackRole1():
               level = 0,
               hp = 100,
               money = 0,
+              exp = 1,
               nhp = 100,
               sp = 100,
               ap = 10,
@@ -24,6 +25,7 @@ class AttackRole1():
         self.level = level
         self.hp = hp
         self.money = money + random.randint(1, 50)
+        self.exp = exp
         self.nhp = nhp
         self.sp = sp
         self.ap = ap
@@ -43,4 +45,8 @@ class AttackRole1():
         self.hp *= self.level
         self.nhp *= self.level
         self.ap *= self.level
-        self.money *= self.level // 3
+        if self.level >= 3:
+            self.money *= self.level // 3
+            self.exp = self.level * random.randint(1, 20)
+        else:
+            self.exp = self.level * 10

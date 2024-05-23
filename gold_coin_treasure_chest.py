@@ -4,9 +4,11 @@ import settings
 import random
 import time
 
-prob_dict = {"Wood":0.6, "Iron":0.2, "Gold":0.1, "Diamond":0.05, "Titanium":0.04, "Uranium":0.009, "Infinite":0.001}
+prob_dict = {"Wood":6000, "Iron":2000, "Gold":1000, "Diamond":500, "Titanium":400, "Uranium":90, "Infinite":10}
+#以万分数为基础的宝箱刷新概率表，分别是60%, 20%, 10%, 5%, 4%, 0.9%, 0.1%
 
 class GoldCoinTreasureChest():
+    """管理宝箱的类"""
     def __init__(self,id = "GCTC" ,prob = None, money = None, answer = None, exp = None):
         self.id = id
         if prob and money and answer and exp:
@@ -17,35 +19,35 @@ class GoldCoinTreasureChest():
         else:
             self.answer = self.set()
     def set(self):
-        self.prob = random.randint(0, 1000)
-        if self.prob >= (1 - prob_dict["Infinite"]) * 1000:
-            self.money = 5000 + random.randrange(0 ,5000, 1000)
-            self.exp = self.money // 10
-            return -7
-        elif self.prob >= (1 - prob_dict["Uranium"]) * 1000:
-            self.money = 1000 + random.randrange(-50 ,50, 10)
-            self.exp = self.money // 10
-            return -6
-        elif self.prob >= (1 - prob_dict["Titanium"]) * 1000:
-            self.money = 800 + random.randrange(-50 ,50, 10)
-            self.exp = self.money // 10
-            return -5
-        elif self.prob >= (1 - prob_dict["Diamond"]) * 1000:
-            self.money = 500 + random.randrange(-50 ,50, 10)
-            self.exp = self.money // 10
-            return -4
-        elif self.prob >= (1 - prob_dict["Gold"]) * 1000:
-            self.money = 100 + random.randrange(-50 ,100 ,10)
-            self.exp = self.money // 10
-            return -3
-        elif self.prob >= (1 - prob_dict["Iron"]) * 1000:
-            self.money = 50 + random.randrange(-50 ,50 ,10)
-            self.exp = self.money // 10
-            return -2
-        else:
+        self.prob = random.randint(0, 10000)
+        if self.prob <= prob_dict["Wood"]:
             self.money = 10 + random.randrange(-10, 50 ,10)
             self.exp = self.money // 10
             return -1
+        elif self.prob - prob_dict["Wood"] <= prob_dict["Iron"]:
+            self.money = 50 + random.randrange(-50 ,50 ,10)
+            self.exp = self.money // 10
+            return -2
+        elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] <= prob_dict["Gold"]:
+            self.money = 100 + random.randrange(-50 ,100 ,10)
+            self.exp = self.money // 10
+            return -3
+        elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] - prob_dict["Gold"] <= prob_dict["Diamond"]:
+            self.money = 500 + random.randrange(-50 ,50, 10)
+            self.exp = self.money // 10
+            return -4
+        elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] - prob_dict["Gold"] - prob_dict["Diamond"] <= prob_dict["Titanium"]:
+            self.money = 800 + random.randrange(-50 ,50, 10)
+            self.exp = self.money // 10
+            return -5
+        elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] - prob_dict["Gold"] - prob_dict["Diamond"] - prob_dict["Diamond"] <= prob_dict["Uranium"]:
+            self.money = 1000 + random.randrange(-50 ,50, 10)
+            self.exp = self.money // 10
+            return -6
+        else:
+            self.money = 5000 + random.randrange(0 ,5000, 1000)
+            self.exp = self.money // 10
+            return -7
     def pri(self, user):
         if self.answer == -1:
             print("你发现了一个木制宝箱")
