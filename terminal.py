@@ -7,7 +7,7 @@ class ErrorReturn():
     def CommandNotFoundError(self):
         cprint(f"Error:Type -> CommandNotFoundError\n\t{self.command} not in The End command", "red")
     def TValueError(self):
-        cprint(f"Error:Type -> ValueError\n\t>!{self.command}<number>!<", "red")
+        cprint(f"Error:Type -> ValueError\n\t>!<number>!<", "red")
     def ErrorCommand(self):
         cprint(f"Error:Type -> ErrorCommand\nTarget:\n\tmap", "red")
     def CommandLost(self):
@@ -64,4 +64,4 @@ class Terminal():
                 error_return.ErrorCommand()
         except IndexError:
             error_return.CommandLost()
-        del j, i, error_return, user, map
+        del error_return, user, map

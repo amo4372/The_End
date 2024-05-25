@@ -19,8 +19,10 @@ class Map():
     def __init__(self):
         self.width = 100
         self.height = 100
-        self.Fprob_dict = {"None":5000, "AR1":1500 ,"GCTC":1100,"TS":500, "SafeSite":450, "DMS": 350, "AR2":200,"BS":100}
+        self.Fprob_dict = {"None":5500, "AR1":1500 ,"GCTC":1100,"TS":500, "SafeSite":450, "DMS": 350, "AR2":200,"BS":100}
         #万分数的字典,分别是55%, 18%, 11%, 5%, 4.5%, 3.5%, 2%, 1%
+        self.Sprob_dict = {"None":5000, "AR2":1800, "GCTC":1000,"TS":500, "SafeSite":450, "AR1":400, "DMS": 350, "BS":200}
+        #万分数的字典,分别是50%, 18%, 10%, 5%, 4.5%, 4%, 3.5%, 2%
         self.j = 0
         self.map = []
         for j in range(self.width * 10):

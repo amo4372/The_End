@@ -5,7 +5,7 @@ import weapons
 import time
 import random
 
-distance_movement_dict = {"NULL": 650, "R": 237, "SSR": 100, "U": 10, "WZ": 3}
+pdm_distance_movement_dict = {"NULL": 650, "R": 240, "SSR": 100, "U": 10}
 
 class DistanceMovementSite:
     def __init__(self,
@@ -86,7 +86,7 @@ class DistanceMovementSite:
         clear_screen()
         if user.pdm % 90 == 0 and user.pdm != 0:
             cprint("完成!", "light_green")
-            time.sleep(3)
+            time.sleep(2)
             weapon = random.choice(weapons.Weapons["U"])
             cprint(f"恭喜你获得 {settings.Distance_Movement_Level[2]} {weapon['NAME']}")
             while True:
@@ -107,7 +107,7 @@ class DistanceMovementSite:
             return 0
         if user.pdm % 10 == 0 and user.pdm != 0:
             cprint("完成!", "light_magenta")
-            time.sleep(3)
+            time.sleep(2)
             weapon = random.choice(weapons.Weapons["SSR"])
             cprint(f"恭喜你获得 {settings.Distance_Movement_Level[1]} {weapon['NAME']}")
             while True:
@@ -127,16 +127,16 @@ class DistanceMovementSite:
             user.pdm += 1
             return 0
         prob = random.randint(0, 1000)
-        if prob <= distance_movement_dict["NULL"]:
+        if prob <= pdm_distance_movement_dict["NULL"]:
             print("完成!")
             money = random.randint(100, 150)
-            time.sleep(3)
+            time.sleep(2)
             user.money += money
             cprint(f"恭喜你获得 {money}元", "light_blue")
             time.sleep(1)
-        elif prob - distance_movement_dict["NULL"] <= distance_movement_dict["R"]:
+        elif prob - pdm_distance_movement_dict["NULL"] <= pdm_distance_movement_dict["R"]:
             print("完成!")
-            time.sleep(3)
+            time.sleep(2)
             weapon = random.choice(weapons.Weapons["R"])
             cprint(f"恭喜你获得 {settings.Distance_Movement_Level[0]} {weapon['NAME']}")
             while True:
@@ -153,9 +153,9 @@ class DistanceMovementSite:
                 else:
                     cprint("(错误的选项)", "red")
                     time.sleep(1)
-        elif prob - distance_movement_dict["NULL"] - distance_movement_dict["R"] <= distance_movement_dict["SSR"]:
+        elif prob - pdm_distance_movement_dict["NULL"] - pdm_distance_movement_dict["R"] <= pdm_distance_movement_dict["SSR"]:
             cprint("完成!", "light_magenta")
-            time.sleep(3)
+            time.sleep(2)
             weapon = random.choice(weapons.Weapons["SSR"])
             cprint(f"恭喜你获得 {settings.Distance_Movement_Level[1]} {weapon['NAME']}")
             while True:
@@ -172,30 +172,11 @@ class DistanceMovementSite:
                 else:
                     cprint("(错误的选项)", "red")
                     time.sleep(1)
-        elif prob - distance_movement_dict["NULL"] - distance_movement_dict["R"] - distance_movement_dict["SSR"] <= distance_movement_dict["U"]:
+        elif prob - pdm_distance_movement_dict["NULL"] - pdm_distance_movement_dict["R"] - pdm_distance_movement_dict["SSR"] <= pdm_distance_movement_dict["U"]:
             cprint("完成!", "light_green")
-            time.sleep(3)
+            time.sleep(2)
             weapon = random.choice(weapons.Weapons["U"])
             cprint(f"恭喜你获得 {settings.Distance_Movement_Level[2]} {weapon['NAME']}")
-            while True:
-                choice_1 = input(colored("(是否替换现在的武器呢...)\t 1.是 2.否", "yellow"))
-                if choice_1 == "1":
-                    user.weapon = weapon
-                    cprint("(不错!)", "yellow")
-                    time.sleep(1)
-                    break
-                elif choice_1 == "2":
-                    cprint("(这武器应该不适合我...)", "yellow")
-                    time.sleep(1)
-                    break
-                else:
-                    cprint("(错误的选项)", "red")
-                    time.sleep(1)
-        else:
-            cprint("完成!", "light_blue")
-            time.sleep(3)
-            weapon = random.choice(weapons.Weapons["WZ"])
-            cprint(f"恭喜你获得 {settings.Distance_Movement_Level[3]} {weapon['NAME']}")
             while True:
                 choice_1 = input(colored("(是否替换现在的武器呢...)\t 1.是 2.否", "yellow"))
                 if choice_1 == "1":

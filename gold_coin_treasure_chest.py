@@ -25,23 +25,23 @@ class GoldCoinTreasureChest():
             self.exp = self.money // 10
             return -1
         elif self.prob - prob_dict["Wood"] <= prob_dict["Iron"]:
-            self.money = 50 + random.randrange(-50 ,50 ,10)
+            self.money = 50 + random.randrange(-10 ,50 ,10)
             self.exp = self.money // 10
             return -2
         elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] <= prob_dict["Gold"]:
-            self.money = 100 + random.randrange(-50 ,100 ,10)
+            self.money = 100 + random.randrange(-10 ,100 ,10)
             self.exp = self.money // 10
             return -3
         elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] - prob_dict["Gold"] <= prob_dict["Diamond"]:
-            self.money = 500 + random.randrange(-50 ,50, 10)
+            self.money = 500 + random.randrange(-10 ,150, 10)
             self.exp = self.money // 10
             return -4
         elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] - prob_dict["Gold"] - prob_dict["Diamond"] <= prob_dict["Titanium"]:
-            self.money = 800 + random.randrange(-50 ,50, 10)
+            self.money = 800 + random.randrange(-10 ,200 , 10)
             self.exp = self.money // 10
             return -5
         elif self.prob - prob_dict["Wood"] - prob_dict["Iron"] - prob_dict["Gold"] - prob_dict["Diamond"] - prob_dict["Diamond"] <= prob_dict["Uranium"]:
-            self.money = 1000 + random.randrange(-50 ,50, 10)
+            self.money = 1000 + random.randrange(-10 ,500 , 10)
             self.exp = self.money // 10
             return -6
         else:

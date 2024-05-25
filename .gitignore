@@ -4,3 +4,5 @@ data/
 lib/
 .vscode/
 test/
+dist/
+build/

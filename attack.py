@@ -65,7 +65,7 @@ def attack_user_input(user, role):
                 break
             else:
                 print(colored("大招能量还未满", "red"))
-    if damage >= role.hp * (1 / 5) * (role.level / user.level):
+    if damage >= role.hp * (1 / 5) * (role.level / user.level) * (role.speed / user.weapon["SPEED"]):
         return False
     else:
         return True
@@ -171,10 +171,11 @@ def AT_Attack(user, role, role_map):
             print(colored("错误的选项","red"))
 def attack(user, role):
     """掌管普攻的模块"""
+    global damage
     damage_type = ""
     if type(user) == User:
         damage = (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.kx) * (0.8 + user.weapon["APM"])
-        if random.randint(0, 1000) <= user.bjl * 1000:
+        if random.randint(0, 1000) <= (user.bjl + user.weapon["BJL"]) * 1000:
             damage = damage * (1 + user.bj_damage + user.weapon["BJ_DAMAGE"])
             damage_type = "暴击"
     else:
@@ -185,8 +186,12 @@ def attack(user, role):
     role.nhp -= damage
     if type(user) == User and user.ne < user.e:
         user.ne += user.e * user.e_ate["E"]
-        user.nhp += damage * user.weapon["REPLY_HP"]
-        user.sp += damage * user.weapon["REPLY_SP"]
+        if user.weapon["REPLY_HP"] != 0:
+            user.nhp += damage * user.weapon["REPLY_HP"]
+            print(colored(f"你已恢复生命值 {round(damage * user.weapon['REPLY_HP'] / user.hp * 100, 3)}%", "green"))
+        if user.weapon["REPLY_SP"] != 0:
+            user.sp += damage * user.weapon["REPLY_SP"]
+            print(f"你已恢复精神值 {round(damage * user.weapon['REPLY_SP'], 3)}%")
         if user.nhp > user.hp:
             user.nhp = user.hp
     if damage < 0:
@@ -201,12 +206,13 @@ def attack(user, role):
     time.sleep(2)
 def e_attack(user, role):
     """掌管技能的模块"""
+    global damage
     damage_type = ""
     if user.e_ate["ATE"] == settings.ATE[0]:
-        damage = user.e_ate["FY"] * (user.weapon["APM"] + user.e_ate["APM"]) * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.hkx)
+        damage = user.e_ate["FY"] * (user.weapon["APM"] + user.e_ate["APM"]) * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.hkx)
     elif user.e_ate["ATE"] == settings.ATE[1]:
-        damage = user.e_ate["FY"] * user.e_ate["APM"] * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.ktkx)
-    if random.randint(0, 1000) <= user.bjl * 1000:
+        damage = user.e_ate["FY"] * (user.weapon["APM"] + user.e_ate["APM"]) * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.ktkx)
+    if random.randint(0, 1000) <= (user.bjl + user.weapon["BJL"]) * 1000:
         damage = damage * (1 + user.bj_damage + user.weapon["BJ_DAMAGE"])
         damage_type = "暴击"
     role.nhp -= damage
@@ -218,8 +224,12 @@ def e_attack(user, role):
         damage = 0
     if role.nhp < 0:
         role.nhp = 0
-    user.nhp += damage * user.weapon["REPLY_HP"]
-    user.sp += damage * user.weapon["REPLY_SP"]
+    if user.weapon["REPLY_HP"] != 0:
+        user.nhp += damage * user.weapon["REPLY_HP"]
+        print(colored(f"你已恢复生命值 {round(damage * user.weapon['REPLY_HP'] / user.hp * 100, 3)}%", "green"))
+    if user.weapon["REPLY_SP"] != 0:
+        user.sp += damage * user.weapon["REPLY_SP"]
+        print(f"你已恢复精神值 {round(damage * user.weapon['REPLY_SP'], 3)}%")
     if user.nhp > user.hp:
         user.nhp = user.hp
     print(colored(f"你已释放技能: {user.e_ate['NAME']}", "yellow"))
@@ -229,12 +239,13 @@ def e_attack(user, role):
     time.sleep(2)
 def q_attack(user, role):
     """掌管大招技能的模块"""
+    global damage
     damage_type = ""
     if user.q_ate["ATE"] == settings.ATE[0]:
         damage = user.q_ate["FY"] * (user.weapon["APM"] + user.q_ate["APM"]) * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.hkx)
     elif user.q_ate["ATE"] == settings.ATE[1]:
-        damage = user.q_ate["FY"] * user.q_ate["APM"] * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.ktkx)
-    if random.randint(0, 1000) <= user.bjl * 1000:
+        damage = user.q_ate["FY"] * (user.weapon["APM"] + user.q_ate["APM"]) * (user.ap + user.weapon["AP"]) * (user.sp / 100) * (1 + user.kxjp + user.weapon["KXJP"]) * user.speed * (1 - role.ktkx)
+    if random.randint(0, 1000) <= (user.bjl + user.weapon["BJL"]) * 1000:
         damage = damage * (1 + user.bj_damage + user.weapon["BJ_DAMAGE"])
         damage_type = "暴击"
     role.nhp -= damage
@@ -243,8 +254,12 @@ def q_attack(user, role):
         damage = 0
     if role.nhp < 0:
         role.nhp = 0
-    user.nhp += damage * user.weapon["REPLY_HP"]
-    user.sp += damage * user.weapon["REPLY_SP"]
+    if user.weapon["REPLY_HP"] != 0:
+        user.nhp += damage * user.weapon["REPLY_HP"]
+        print(colored(f"你已恢复生命值 {round(damage * user.weapon['REPLY_HP'] / user.hp * 100, 3)}%", "green"))
+    if user.weapon["REPLY_SP"] != 0:
+        user.sp += damage * user.weapon["REPLY_SP"]
+        print(f"你已恢复精神值 {round(damage * user.weapon['REPLY_SP'], 3)}%")
     if user.nhp > user.hp:
         user.nhp = user.hp
     print(colored(f"你已释放大招: {user.q_ate['NAME']}", "yellow"))

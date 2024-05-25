@@ -194,12 +194,14 @@ class User():
     def died(self):
         """检测玩家是否达成死亡条件"""
         if self.nhp <= 0:
+            play(settings.sounds["died"])
             cprint("你死了", "red")
-            time.sleep(3)
+            time.sleep(18)
             return -1
         elif self.sp <= self.speed * self.csp:
+            play(settings.sounds["died"])
             cprint("你疯了", "red")
-            time.sleep(3)
+            time.sleep(18)
             return -2
         else:
             return True

@@ -7,7 +7,8 @@ version = "v0.0.1.7_240523"
 play_music_state = True
 
 sounds = {"coins": ["sounds/coins/coin0.wav", "sounds/coins/coin1.wav"],
-          "noises": ["sounds/Noise/300hz.wav", "sounds/Noise/600hz.wav", "sounds/Noise/1000hz.wav"]}
+          "noises": ["sounds/Noise/300hz.wav", "sounds/Noise/600hz.wav", "sounds/Noise/1000hz.wav"],
+          "died": "sounds/Died/requiem0.wav"}
 
 Reply_Hp_Drug = {"id":"ReplyDrug","NAME":"普通药物" , "PRICE":80, "HP":15, "SP":0,"E":0, "QE":0, "SPEED":0}
 Reply_Sp_Drug = {"id":"ReplyDrug","NAME":"精神药物" ,"PRICE":100, "HP":0, "SP":15, "E":0, "QE":0, "SPEED":0}
