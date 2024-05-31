@@ -1,8 +1,9 @@
 from termcolor import *
 
+version = "v0.0.1.7_240526_beta"
+
 NoneType = type(None)
 
-version = "v0.0.1.7_240523"
 
 play_music_state = True
 

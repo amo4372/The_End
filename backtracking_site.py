@@ -11,7 +11,7 @@ class BacktrackingSite():
                  ):
         self.id = id
         if not uplevel:
-            self.uplevel = random.randint(1, 3)
+            self.uplevel = random.randint(1, 2)
         else:
             self.uplevel = uplevel
     def back_to(self, user):

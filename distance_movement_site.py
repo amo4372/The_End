@@ -84,6 +84,7 @@ class DistanceMovementSite:
     def pdm(self, user):
         """管理常驻抽卡的模块"""
         clear_screen()
+        user.pdm += 1
         if user.pdm % 90 == 0 and user.pdm != 0:
             cprint("完成!", "light_green")
             time.sleep(2)
@@ -191,4 +192,3 @@ class DistanceMovementSite:
                 else:
                     cprint("(错误的选项)", "red")
                     time.sleep(1)
-        user.pdm += 1

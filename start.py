@@ -41,13 +41,11 @@ def start():
                 if choice_1 == "1":
                     choice_2 = input("是否关闭音乐1.开\t2.关")
                     if choice_2 == "1":
-                        settings.play_music_state = False
-                        stop()
-                        pass
+                        settings.play_music_state = True
                         break
                     elif choice_2 == "2":
-                        settings.play_music_state = True
-                        pass
+                        settings.play_music_state = False
+                        stop()
                         break
                     else:
                         cprint("(错误的选项)", "red")
