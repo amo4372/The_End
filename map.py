@@ -18,8 +18,8 @@ import sys
 
 class Map():
     def __init__(self):
-        self.width = 250
-        self.height = 250
+        self.width = 100
+        self.height = 100
         self.Fprob_dict = {"None":5500, "AR1":1500 ,"GCTC":1100,"TS":500, "SafeSite":450, "DMS": 300, "AR2":250,"BS":100}
         #万分数的字典,分别是55%, 18%, 11%, 5%, 4.5%, 3%, 2.5%, 1%
         self.Sprob_dict = {"None":5000, "AR2":1800, "GCTC":1000,"TS":500, "SafeSite":450, "AR1":400, "DMS": 350, "BS":200}
