@@ -47,14 +47,16 @@ class Terminal():
                                     print(map.map[user.x + i][user.y + j].id, end=", ")
                                 else:
                                     print("None", end=", ")
+                            print("\n")
                         print("\n")
                     else:
                         for j in range(max):
                             for i in range(max):
-                                if map.map[user.x + i][user.y + j]:
-                                    print(map.map[user.x + i][user.y + j].id, end=", ")
+                                if map.map[user.x - i][user.y - j]:
+                                    print(map.map[user.x - i][user.y - j].id, end=", ")
                                 else:
                                     print("None", end=", ")
+                            print("\n")
                         print("\n")
                 except IndexError:
                     pass

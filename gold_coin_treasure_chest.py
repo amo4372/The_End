@@ -19,7 +19,7 @@ class GoldCoinTreasureChest():
         else:
             self.answer = self.set()
     def set(self):
-        self.prob = random.randint(0, 10000)
+        self.prob = random.randint(0, 10001)
         if self.prob <= prob_dict["Wood"]:
             self.money = 10 + random.randrange(-10, 50 ,10)
             self.exp = self.money // 10

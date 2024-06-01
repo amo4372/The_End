@@ -21,11 +21,14 @@ class BacktrackingSite():
         time.sleep(1)
         cprint(f"你已提升 等级{self.uplevel}级", "magenta")
         time.sleep(1)
-        l = user.level - 1
-        for i in range(self.uplevel):
-            user.exp += settings.EXP[l]
-            l += 1
-            user.uplevel()
+        try:
+            l = user.level - 1
+            for i in range(self.uplevel):
+                user.exp += settings.EXP[l]
+                l += 1
+                user.uplevel()
+        except IndexError:
+            pass
         cprint("怎么回事?", "yellow")
         time.sleep(1)
         cprint("已损坏......", "magenta")

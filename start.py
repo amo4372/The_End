@@ -10,10 +10,10 @@ import store_files
 username = ""
 
 def start():
+    play("music/The_End.wav")
     while True:
         clear_screen()
         print(colored("\tThe End","white","on_black",["bold","dark"]))
-        play("music/The_End.wav")
         choice = input("\t1.开始游戏\n\t2.选项\n\t3.详情\n\t4.退出\n\t")
         if choice == "1":
             choice_1 = input("1.新游戏\t2.继续游戏\t3.返回")
@@ -54,10 +54,8 @@ def start():
         elif choice == "3":
             print("--作者:amo4372--")
             print(settings.version)
-            time.sleep(2)
-            choice_1 = input("是否返回上一级(按任意键即可)")
-            if choice_1 != None:
-                pass
+            time.sleep(1)
+            input("是否返回上一级(按任意键即可)")
         elif choice == "4":
             sys.exit(0)
         else:

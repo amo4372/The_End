@@ -2,4 +2,4 @@
 
 import event
 
-event.event()
+event.game()

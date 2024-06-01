@@ -1,4 +1,5 @@
 from termcolor import *
+from stop_thread import *
 import sys
 
 from clear_screen import clear_screen
@@ -6,7 +7,7 @@ from playmusic import *
 import settings
 import store_files
 
-def set_settings(user, map, oper_time, thread_died_event):
+def set_settings(user, map, oper_time, thread_died):
     while True:
         clear_screen()
         cprint("--菜单--", "white", "on_black", ["bold","dark"])
@@ -33,7 +34,7 @@ def set_settings(user, map, oper_time, thread_died_event):
                 else:
                     cprint("(错误的选项)", "red")
         elif choice == "4":
-            thread_died_event.set()
-            sys.exit()
+            stop_thread(thread_died)
+            sys.exit(0)
         else:
             cprint("(错误的选项)")

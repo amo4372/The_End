@@ -3,6 +3,7 @@ import random
 import settings
 import time
 import weapons
+from distance_movement_site import DistanceMovementSite as DMS
 from termcolor import *
 from clear_screen import clear_screen
 from playmusic import play, stop
@@ -36,11 +37,19 @@ class User():
                 bjl = 0.01,
                 bj_damage = 0.01,
                 weapon = random.choice(weapons.InitWeapons),
-                bag = [],
+                bag = [[], []],
                 csp = 1.5,
                 pdm = 0,
-                udm = 0,
+                updm = 0,
                 ssdm = 0,
+                updm_state = False,
+                u_pdm = 0,
+                u_updm = 0,
+                u_ssdm = 0,
+                ssr_pdm = 0,
+                ssr_updm = 0,
+                ssr_ssdm = 0,
+                dms = False,
                 choice = None,
                 s = None
             ):
@@ -77,8 +86,16 @@ class User():
         self.weapon = weapon
         self.csp = csp
         self.pdm = pdm
-        self.udm = udm
+        self.updm = updm
         self.ssdm = ssdm
+        self.updm_state = updm_state
+        self.u_pdm = u_pdm
+        self.u_updm = u_updm
+        self.u_ssdm = u_ssdm
+        self.ssr_pdm = ssr_pdm
+        self.ssr_updm = ssr_updm
+        self.ssr_ssdm = ssr_ssdm
+        self.dms = dms
         self.choice = choice
         self.s = s
     def move(self):
@@ -184,6 +201,12 @@ class User():
             self.seelevel()
         elif self.choice.lower() == "e":
             self.up_role_pri()
+        elif self.choice.lower() == "d":
+            if self.dms:
+                dms = DMS()
+                dms.pri(self)
+            else:
+                cprint("该功能暂未解锁...", "red")
         elif self.choice.lower() == "s":
             return "see"
         elif self.choice.lower() == "t":
@@ -191,20 +214,6 @@ class User():
         else:
             print(colored("(错误的选项)", "red"))
             self.move()
-    def died(self):
-        """检测玩家是否达成死亡条件"""
-        if self.nhp <= 0:
-            play(settings.sounds["died"])
-            cprint("你死了", "red")
-            time.sleep(18)
-            return -1
-        elif self.sp <= self.speed * self.csp:
-            play(settings.sounds["died"])
-            cprint("你疯了", "red")
-            time.sleep(18)
-            return -2
-        else:
-            return True
     def pri(self,
          day,
          t,
@@ -243,10 +252,16 @@ class User():
         else:
             play(settings.sounds["noises"][2])
             return colored("疯狂", "red")
+    def give_user_item(self, *args):
+        for i in args:
+            if i["id"] == "ReplyDrug":
+                self.bag[1].append(i)
+            elif i["id"] == "Weapon":
+                self.bag[0].append(i)
     def use(self):
         """使用玩家背包道具"""
         while True:
-            if not self.bag:
+            if not(self.bag[0] or self.bag[1]):
                 clear_screen()
                 cprint("(背包应该是空的)", "yellow")
                 self.move()
@@ -255,43 +270,78 @@ class User():
                 clear_screen()
                 print("你打开了背包")
                 print("背包里有:")
+                print("1.武器  2.物品 q.返回")
                 cprint("(要用哪个呢?)", "yellow")
-            i = 1
-            for item in self.bag:
-                print(colored(f"{i}.--{item['NAME']}--", "yellow"))
-                i += 1
+                choice = input("")
+                if choice == "1":
+                    i = 1
+                    for item in self.bag[0]:
+                        print(colored(f"{i}.--{item['NAME']}{colored('--', 'yellow')}", "yellow"))
+                        i += 1
+                    bag_type = 0
+                elif choice == "2":
+                    i = 1
+                    for item in self.bag[1]:
+                        print(colored(f"{i}.--{item['NAME']}{colored('--', 'yellow')}", "yellow"))
+                        i += 1
+                    bag_type = 1
+                elif choice.lower() == "q":
+                    cprint("(没啥想用的)", "yellow")
+                    break
+                else:
+                    cprint("(错误的选项)", "red")
+                    time.sleep(1)
+                    continue
             choice = input("请输入物品序号,退出q")
             if choice.lower() == "q":
                 cprint("(应该没了)", "yellow")
                 break
             else:
-                choice = int(choice)
-                if choice > i and choice <= 0:
+                try:
+                    choice = int(choice)
+                except ValueError:
                     cprint("(错误的选项)", "red")
-                else:
-                    if self.bag[choice - 1]["id"] == "ReplyDrug":
-                        cprint(f"你已恢复生命值{round(self.bag[choice - 1]['HP'] / self.hp * 100, 3)}%", "green")
-                        print(f"你已恢复精神值{round(self.bag[choice - 1]['SP'] / 100 * 100, 3)}%")
-                        cprint(f"你已恢复技能能量{round(self.bag[choice - 1]['E'] / self.e * 100, 3)}%", "magenta")
-                        cprint(f"你已恢复大招能量{round(self.bag[choice - 1]['QE'] / self.q_e * 100, 3)}%", "yellow")
-                        print(f"你已加快速度{round(self.bag[choice - 1]['SPEED'] / self.speed * 100, 3)}%")
+                    time.sleep(1)
+                    continue
+                try:
+                    if self.bag[bag_type][choice - 1]["id"] == "ReplyDrug":
+                        if self.bag[bag_type][choice - 1]['HP'] != 0:
+                            cprint(f"你已恢复生命值{round(self.bag[bag_type][choice - 1]['HP'] / self.hp * 100, 3)}%", "green")
+                        if self.bag[bag_type][choice - 1]['SP'] != 0:
+                            print(f"你已恢复精神值{round(self.bag[bag_type][choice - 1]['SP'] / 100 * 100, 3)}%")
+                        if self.bag[bag_type][choice - 1]['E'] != 0:
+                            cprint(f"你已恢复技能能量{round(self.bag[bag_type][choice - 1]['E'] / self.e * 100, 3)}%", "magenta")
+                        if self.bag[bag_type][choice - 1]['QE'] != 0:    
+                            cprint(f"你已恢复大招能量{round(self.bag[bag_type][choice - 1]['QE'] / self.q_e * 100, 3)}%", "yellow")
+                        if self.bag[bag_type][choice - 1]['SPEED'] != 0:    
+                            print(f"你已加快速度{round(self.bag[bag_type][choice - 1]['SPEED'] / self.speed * 100, 3)}%")
                         if self.nhp + self.hp > self.hp:
                             self.nhp = self.hp
                         else:	
-                            self.nhp += self.bag[choice - 1]["HP"]
-                        self.sp += self.bag[choice - 1]["SP"]
-                        if self.ne + self.bag[choice - 1]["E"] / self.e > 1:
+                            self.nhp += self.bag[bag_type][choice - 1]["HP"]
+                        self.sp += self.bag[bag_type][choice - 1]["SP"]
+                        if self.ne + self.bag[bag_type][choice - 1]["E"] / self.e > 1:
                             self.ne = self.e
                         else:
-                            self.ne += self.bag[choice - 1]["E"]
-                        if self.nq_e + self.bag[choice - 1]["QE"] / 100 > 1:
+                            self.ne += self.bag[bag_type][choice - 1]["E"]
+                        if self.nq_e + self.bag[bag_type][choice - 1]["QE"] / 100 > 1:
                             self.nq_e = self.q_e
                         else:
-                            self.nq_e += self.bag[choice - 1]["QE"]
-                        self.speed += self.bag[choice - 1]["SPEED"]
-                        self.bag.pop(choice - 1)
+                            self.nq_e += self.bag[bag_type][choice - 1]["QE"]
+                        self.speed += self.bag[bag_type][choice - 1]["SPEED"]
+                        self.bag[bag_type].pop(choice - 1)
                         time.sleep(2)
                         clear_screen()
+                    elif self.bag[bag_type][choice - 1]["id"] == "Weapon":
+                        self.bag[bag_type].append(self.weapon)
+                        self.weapon = self.bag[bag_type][choice - 1]
+                        print(f"你已更换武器为{self.weapon['NAME']}")
+                        self.bag[bag_type].pop(choice - 1)
+                        time.sleep(2)
+                        clear_screen()
+                except IndexError:
+                    cprint("该物品不存在", "red")
+                    time.sleep(1)
     def uplevel(self):
         """玩家升级"""
         if self.exp >= settings.EXP[self.level - 1]:
@@ -304,7 +354,8 @@ class User():
             else:
                 self.sp = 100
             time.sleep(2)
-        elif self.level == 100:
+        elif self.level == 100 and not settings.User_Max_Level:
+            settings.User_Max_Level = True
             cprint("恭喜你已满级!", "green")
             time.sleep(2)
         else:
@@ -312,10 +363,15 @@ class User():
     def seelevel(self):
         """玩家查看自己的等级"""
         clear_screen()
-        cprint(f"距离下一次(Lv.{self.level} -> Lv.{self.level + 1})升级还剩:", "cyan")
-        print(f'{colored("--" * round(self.exp / settings.EXP[self.level - 1] * 10), "light_cyan")}{"--" * round((settings.EXP[self.level - 1] - self.exp) / settings.EXP[self.level - 1] * 10)}  {round(self.exp / settings.EXP[self.level - 1] * 100, 3)}%')
-        cprint(f"{int(self.exp)} / {settings.EXP[self.level - 1]}", "light_cyan")
-        time.sleep(3)
+        if not settings.User_Max_Level:
+            cprint(f"距离下一次(Lv.{self.level} -> Lv.{self.level + 1})升级还剩:", "cyan")
+            print(f'{colored("--" * round(self.exp / settings.EXP[self.level - 1] * 10), "light_cyan")}{"--" * round((settings.EXP[self.level - 1] - self.exp) / settings.EXP[self.level - 1] * 10)}  {round(self.exp / settings.EXP[self.level - 1] * 100, 3)}%')
+            cprint(f"{int(self.exp)} / {settings.EXP[self.level - 1]}", "light_cyan")
+            time.sleep(3)
+        else:
+            cprint("已满级!", "light_cyan")
+            cprint(f"{int(self.exp)} / {settings.EXP[self.level - 1]}", "light_cyan")
+            time.sleep(2)
     def up_role_pri(self):
         cprint("角色详情:", "green")
         cprint(f"\t角色名: {self.name}", "green")
@@ -327,7 +383,7 @@ class User():
         cprint(f"\t武器类型: {self.weapon['TYPE']}", "green")
         cprint(f"\t武器名: {self.weapon['NAME']}", "green")
         cprint(f"\t武器等级: Lv.{self.weapon['LEVEL']}", "green")
-        cprint(f"\t武器攻击力: {self.weapon['AP']}\n\t武器攻击力加成: {self.weapon['APM'] * 100}%\n\t武器暴击率: {self.weapon['BJL'] * 100}%\n\t武器暴击伤害: {self.weapon['BJ_DAMAGE'] * 100}%\n\t武器回复血量: {self.weapon['REPLY_HP'] * 100}%\n\t武器恢复精神: {self.weapon['REPLY_SP'] * 100}%\n\t武器抗性击破效率: {self.weapon['KXJP'] * 100}%", "green")
+        cprint(f"\t武器攻击力: {self.weapon['AP']}\n\t武器攻击力加成: {self.weapon['APM'] * 100}%\n\t武器暴击率: {self.weapon['BJL'] * 100}%\n\t武器暴击伤害: {self.weapon['BJ_DAMAGE'] * 100}%\n\t武器回复血量: {self.weapon['REPLY_HP'] * 100}%\n\t武器恢复精神: {self.weapon['REPLY_SP'] * 100}%\n\t武器击破效率: {self.weapon['KXJP'] * 100}%", "green")
         while True:
             try:
                 choice = input(colored("1.角色升级\t2.武器升级\tq.返回 ", "green"))
@@ -349,6 +405,16 @@ class User():
                     if self.money >= settings.Up_Money[self.weapon['LEVEL'] - 1]:
                         if self.up_weapon_level_pri() == -1:
                             break
+                    else:
+                        while True:
+                            try:
+                                choice_1 = input("(按任意键返回)")
+                                if choice_1:
+                                    break
+                            except (EOFError, KeyboardInterrupt):
+                                cprint("(错误的选项)", "red")
+                                time.sleep(1)
+                        break
                 elif choice.lower() == "q":
                     break
             except (EOFError, KeyboardInterrupt):

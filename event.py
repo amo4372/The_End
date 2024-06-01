@@ -1,28 +1,41 @@
+from termcolor import *
 from map import Map
 from user import User
 from oper_time import OperTime
 from terminal import Terminal
 from clear_screen import clear_screen
+from playmusic import play
+from stop_thread import stop_thread
+import settings
 import attack
 import start
 import set_settings
 import store_files
-import os
 import threading
 import time
-
-
-def if_died(event):
-    global user
+import sys
+  
+def if_died():
+    """检测玩家是否达成死亡条件"""
+    global user, MainThread
     while True:
-        if user.died() != True:
+        if user.nhp <= 0:
+            stop_thread(MainThread)
             clear_screen()
-            os._exit(1)
-        if event.is_set():
-            break
+            cprint("你死了", "red")
+            play(settings.sounds["died"])
+            time.sleep(16)
+            sys.exit(0)
+        elif user.sp <= user.speed * user.csp:
+            stop_thread(MainThread)
+            clear_screen()
+            cprint("你疯了", "red")
+            play(settings.sounds["died"])
+            time.sleep(16)
+            sys.exit(0)
         time.sleep(0.05)
-def event():
-    global user
+def init():
+    global user, terminal, oper_time, map
     terminal = Terminal()
     answer = start.start()
     if answer != -1 and answer != None:
@@ -33,10 +46,9 @@ def event():
         map = Map()
         oper_time = OperTime()
         map.run()
+def event():
+    global user, terminal, oper_time, map, thread_died
     try:
-        thread_died_event = threading.Event()
-        thread_died = threading.Thread(target=if_died, name="user_died", args=(thread_died_event,))
-        thread_died.start()
         while True:
             oper_time.set_time()
             user.uplevel()
@@ -60,7 +72,7 @@ def event():
             user.pri(int(oper_time.game_time_list[2]), oper_time.if_time(), oper_time.cget_time())
             answer = user.move()
             if answer == -1:
-                set_settings.set_settings(user, map, oper_time, thread_died_event)
+                set_settings.set_settings(user, map, oper_time, thread_died)
             elif answer == "see":
                 map.see(user.x, user.y, oper_time.if_time())
             elif answer == "terminal":
@@ -69,6 +81,14 @@ def event():
             oper_time.oper_time()
     except SystemExit:
         pass
-    except:
-        thread_died_event.set()
+    except Exception as e:
+        print(f"游戏出现错误 {e}")
+        print(f"正在尝试备份存档...")
         store_files.error_store_file(user, map, oper_time)
+def game():
+    global MainThread, thread_died
+    init()
+    MainThread = threading.Thread(target=event, name="MainThread")
+    MainThread.start()
+    thread_died = threading.Thread(target=if_died, name="user_died")
+    thread_died.start()

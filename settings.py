@@ -1,6 +1,6 @@
 from termcolor import *
 
-version = "v0.0.1.7_240526_beta"
+version = "v0.0.1.8_240601_beta"
 
 NoneType = type(None)
 
@@ -24,6 +24,10 @@ Permanent_Distance_Movement = 160 #常驻跃迁所需花费
 UP_Distance_Movement = 200 #UP跃迁所需花费
 
 Star_Search_Distance_Movement = 500 #探星跃迁所需花费
+
+User_UPDM_state = False
+
+User_Max_Level = False
 
 EXP = [value ** 2 for value in range(10,110)]
 

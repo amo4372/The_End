@@ -10,6 +10,7 @@ import oper_time
 
 from settings import NoneType
 from termcolor import *
+from stop_thread import stop_thread
 import random
 import time
 import threading
@@ -17,12 +18,13 @@ import sys
 
 class Map():
     def __init__(self):
-        self.width = 100
-        self.height = 100
-        self.Fprob_dict = {"None":5500, "AR1":1500 ,"GCTC":1100,"TS":500, "SafeSite":450, "DMS": 350, "AR2":200,"BS":100}
-        #万分数的字典,分别是55%, 18%, 11%, 5%, 4.5%, 3.5%, 2%, 1%
+        self.width = 250
+        self.height = 250
+        self.Fprob_dict = {"None":5500, "AR1":1500 ,"GCTC":1100,"TS":500, "SafeSite":450, "DMS": 300, "AR2":250,"BS":100}
+        #万分数的字典,分别是55%, 18%, 11%, 5%, 4.5%, 3%, 2.5%, 1%
         self.Sprob_dict = {"None":5000, "AR2":1800, "GCTC":1000,"TS":500, "SafeSite":450, "AR1":400, "DMS": 350, "BS":200}
         #万分数的字典,分别是50%, 18%, 10%, 5%, 4.5%, 4%, 3.5%, 2%
+        self.finish_time = 0
         self.j = 0
         self.map = []
         for j in range(self.width * 10):
@@ -31,7 +33,7 @@ class Map():
     def make_map(self):
         for self.j in range(self.width * 10):
             for i in range(self.height * 10):
-                self.prob = random.randint(0, 10000)
+                self.prob = random.randint(0, 10001)
                 if self.prob <= self.Fprob_dict["None"]:
                     self.map[self.j].append(None)
                 elif self.prob - self.Fprob_dict["None"] <= self.Fprob_dict["AR1"]:
@@ -214,18 +216,28 @@ class Map():
         del max_see, x, y, time_type
     def make_map_pri(self):
         while (self.j + 1) / (self.width * 10) < 1:
-            print(f"正在生成地图,请稍后...\t进度条:{round((self.j + 1) / (self.width * 10) * 10) * colored('--', 'green')}{round((self.width * 10 - self.j + 1) / (self.width * 10) * 10) * '--'}\t{round((self.j + 1) / (self.width * 10) * 100, 3)}%", end="\r")
+            print(f"正在生成地图,请稍后...\t进度条:{round((self.j + 1) / (self.width * 10) * 10) * colored('--', 'green')}{round((self.width * 10 - self.j + 1) / (self.width * 10) * 10) * '--'}\t{round((self.j + 1) / (self.width * 10) * 100, 3)}%  预计{self.finish_time}秒后完成", end="\r")
             time.sleep(0.01)
         clear_screen()
         cprint("生成完成 Finsh!", "green")
         time.sleep(1)
         clear_screen()
+    def oper_speed(self):
+        while True:
+            j_ago = self.j
+            time.sleep(1)
+            j_now = self.j
+            speed = j_now - j_ago
+            self.finish_time = round((self.width * 10 - self.j) / speed, 2)
     def run(self):
-        thread_0 = threading.Thread(target=self.make_map)
-        thread_1 = threading.Thread(target=self.make_map_pri)
+        thread_0 = threading.Thread(target=self.make_map, name="make_map")
+        thread_1 = threading.Thread(target=self.make_map_pri, name="make_map_pri")
+        thread_2 = threading.Thread(target=self.oper_speed, name="oper_speed")
         thread_0.start()
+        thread_2.start()
         thread_1.start()
         thread_0.join()
+        stop_thread(thread_2)
     def _get_map(self):
         self.SafeSite = 0
         self.TS = 0
