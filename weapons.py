@@ -44,6 +44,9 @@ LightSword = {"NAME":colored("光之刃", "light_green"), "id":"Weapon", "TYPE":
 GodSword = {"NAME":colored("神之刃", "light_green"), "id":"Weapon", "TYPE":Weapons_Type[2], "AP":30,"LEVEL":1,
                        "SPEED":1.2,"SPEED_MAX":1.2, "APM":0.05,"BJL":0.12,"BJ_DAMAGE":0.15, "REPLY_HP":0.08, "REPLY_SP":0.01, "KXJP":0.04, "LAP":30}
 
+EventuallySword = {"NAME":colored("终焉之刃", "light_green"), "id":"Weapon", "TYPE":Weapons_Type[2], "AP":35,"LEVEL":1,
+                       "SPEED":1.25,"SPEED_MAX":1.25, "APM":0.055,"BJL":0.125,"BJ_DAMAGE":0.155, "REPLY_HP":0.05, "REPLY_SP":0.02, "KXJP":0.05, "LAP":35}
+
 Death_Eventually = {"NAME":colored("死神终焉", "light_blue"), "ID":"Weapon", "TYPE":Weapons_Type[1], "AP":45,"LEVEL":1,
                        "SPEED":3.25,"SPEED_MAX":3.25, "APM":0.08,"BJL":0.2 ,"BJ_DAMAGE":0.2, "REPLY_HP":0.1, "REPLY_SP":0.02, "KXJP":0.08, "LAP":45}
 
@@ -51,13 +54,13 @@ InitWeapons = [Interstellar_Pistol, Interstellar_Sickle]
 
 RWeapons = [Interstellar_Pistol, Interstellar_Sickle, Iron_Pistol]
 SSRWeapons = [Laser_Sickle, BiuBiu_Pistol, Subspace_Pistol]
-UWeapons = [Ivory_Pistol, Shadeblade, DragonBlade, FrostSword, FrieFlameSword, WindSword, LightSword]
+UWeapons = [Ivory_Pistol, Shadeblade, DragonBlade, FrostSword, FrieFlameSword, WindSword, LightSword, GodSword, EventuallySword]
 WZWeapons = [Death_Eventually]
 
 PDMWeapons = {"R":RWeapons, "SSR":SSRWeapons, "U":UWeapons[0:7]}
 #常驻跃迁内的武器
 
-UPDMWeapons = {"R":RWeapons, "SSR":[Laser_Sickle, BiuBiu_Pistol, Subspace_Pistol], "U":GodSword}
+UPDMWeapons = {"R":RWeapons, "SSR":[Laser_Sickle, BiuBiu_Pistol, Subspace_Pistol], "U": EventuallySword}
 #UP跃迁内的武器
 
 Weapons = {"R":RWeapons, "SSR":SSRWeapons, "U":UWeapons, "WZ":WZWeapons}

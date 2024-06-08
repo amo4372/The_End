@@ -38,7 +38,7 @@ class User():
                 bj_damage = 0.01,
                 weapon = random.choice(weapons.InitWeapons),
                 bag = [[], []],
-                csp = 1.5,
+                csp = 5,
                 pdm = 0,
                 updm = 0,
                 ssdm = 0,
@@ -217,13 +217,14 @@ class User():
     def pri(self,
          day,
          t,
-         ct
+         ct,
+         weather
         ):
         """报告玩家的各项数据"""
         time.sleep(1)
         clear_screen()
         cprint(f"---- Day {day} ----", "light_yellow")
-        print(f"时间:{t} {ct}")
+        print(f"时间:{t} {ct}\t天气: {weather}")
         print(f"命途:{self.ate}\t用户名:{self.name}")
         print(colored(f"当前生命值:{round(self.nhp / self.hp * 100, 3)}%", "green"), colored(f"金钱:{self.money}元", "yellow"))
         print(f"精神状态:", f"{self.mat()}")
@@ -455,4 +456,4 @@ class User():
         self.hp = 100 * self.role_level
         self.nhp = 100 * self.role_level
         self.ap = 10 * self.role_level
-        self.csp = 1.5 / (self.role_level / 1.25)
+        self.csp = 5 / (self.role_level / 1.25)

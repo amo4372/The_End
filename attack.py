@@ -82,6 +82,53 @@ def ComAttack(user, role, role_map):
     else:
         ComAttack(user, role, role_map)
     stop()
+def AI_attack(user, role):
+    global damage
+    e = False
+    q = False
+    if user.nq_e == user.q_e:
+        q = True
+    if user.ne // (user.e * user.e_ate["E"]) != 0:
+        e = True
+    if q:
+        q_attack(user, role)
+    if e:
+        e_attack(user, role)
+    else:
+        attack(user, role)
+    if damage >= role.hp * (1 / 5) * (role.level / user.level) * (role.speed / user.weapon["SPEED"]):
+        return False
+    else:
+        return True
+def AI(user, role, role_map):
+    if user.weapon["SPEED"] <= 0:
+        user.weapon["SPEED"] = user.weapon["SPEED_MAX"]
+    attack_pri(user, role)
+    if user.weapon["TYPE"] == weapons.Weapons_Type[0]:
+        user.weapon["BULLETS"] -= 1
+        if not user.weapon["BULLETS"] < 0:
+            state = AI_attack(user, role)
+        else:
+            state = True
+            user.weapon["BULLETS"] = user.weapon["BULLET_MAX"]
+            cprint("怎么没子弹了?(装弹中...)", "yellow")
+    else:
+        state = AI_attack(user, role)
+    if state:
+        attack(role, user)
+    else:
+        cprint("就你?!(已打断敌人进攻)", "yellow")
+        user.weapon["SPEED"] -= user.weapon["SPEED_MAX"] * 0.25
+        time.sleep(2)
+    if role.nhp <= 0:
+        user.kxjp -= 0.2
+        role_map[user.x][user.y] = None
+        print(f"{role.name}死了")
+        user.money += role.money
+        user.exp += role.exp
+        print(f"你已获得", colored(f"{role.money}元", "yellow"))
+        cprint(f"已获得经验 {role.exp}", "light_cyan")
+        return 0
 def MT_Attack(user, role, role_map):
     """掌管手动攻击的模块"""
     global damage
@@ -124,15 +171,7 @@ def AT_Attack(user, role, role_map):
             else:
                 print("敌人“啪”的一下打中你")
                 while True:
-                    attack(role, user)
-                    attack(user, role)
-                    if role.nhp <= 0:
-                        role_map[user.x][user.y] = None
-                        print(f"{role.name}死了")
-                        user.money += role.money
-                        user.exp += role.exp
-                        print(f"你已获得", colored(f"{role.money}元", "yellow"))
-                        cprint(f"已获得经验 {role.exp}", "light_cyan")
+                    if AI(user, role, role_map) == 0:
                         break
                 break
         elif choice == "2":
@@ -140,31 +179,12 @@ def AT_Attack(user, role, role_map):
                 print("你正中敌人弱点")
                 user.kxjp += 0.2
                 while True:
-                    attack(user, role)
-                    attack(user, role)
-                    attack(role, user)
-                    if role.nhp <= 0:
-                        user.kxjp -= 0.2
-                        role_map[user.x][user.y] = None
-                        print(f"{role.name}死了")
-                        user.money += role.money
-                        user.exp += role.exp
-                        print(f"你已获得", colored(f"{role.money}元", "yellow"))
-                        cprint(f"已获得经验 {role.exp}", "light_cyan")
+                    if AI(user, role, role_map) == 0:
                         break
-                break
             else:
                 print("你打中了敌人")
                 while True:
-                    attack(user, role)
-                    attack(role, user)
-                    if role.nhp <= 0:
-                        role_map[user.x][user.y] = None
-                        print(f"{role.name}死了")
-                        user.money += role.money
-                        user.exp += role.exp
-                        print(f"你已获得", colored(f"{role.money}元", "yellow"))
-                        cprint(f"已获得经验 {role.exp}", "light_cyan")
+                    if AI(user, role, role_map) == 0:
                         break
                 break
         else:

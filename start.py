@@ -6,6 +6,7 @@ import time
 import sys
 import random
 import store_files
+import set_settings
 
 username = ""
 
@@ -36,21 +37,7 @@ def start():
                 print(colored("(错误的选项)", "red"))
                 start()
         elif choice == "2":
-            while True:
-                choice_1 = input("1.音乐")
-                if choice_1 == "1":
-                    choice_2 = input("是否关闭音乐1.开\t2.关")
-                    if choice_2 == "1":
-                        settings.play_music_state = True
-                        break
-                    elif choice_2 == "2":
-                        settings.play_music_state = False
-                        stop()
-                        break
-                    else:
-                        cprint("(错误的选项)", "red")
-                else:
-                    cprint("(错误的选项)", "red")
+            set_settings.set_settings(None, None, None, None)
         elif choice == "3":
             print("--作者:amo4372--")
             print(settings.version)

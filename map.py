@@ -37,29 +37,20 @@ class Map():
                 if self.prob <= self.Fprob_dict["None"]:
                     self.map[self.j].append(None)
                 elif self.prob - self.Fprob_dict["None"] <= self.Fprob_dict["AR1"]:
-                    i = AttackRole1()
-                    self.map[self.j].append(i)
+                    self.map[self.j].append(AttackRole1())
                 elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] <= self.Fprob_dict["GCTC"]:
-                    i = GCTC()
-                    self.map[self.j].append(i)
+                    self.map[self.j].append(GCTC())
                 elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] <= self.Fprob_dict["TS"]:
-                    i = TS()
-                    self.map[self.j].append(i)
+                    self.map[self.j].append(TS())
                 elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] - self.Fprob_dict["TS"] <= self.Fprob_dict["SafeSite"]:
-                    i = SafeSite()
-                    self.map[self.j].append(i)
+                    self.map[self.j].append(SafeSite())
                 elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] - self.Fprob_dict["TS"] - self.Fprob_dict["SafeSite"] <= self.Fprob_dict["DMS"]:
-                    i = DMS()
-                    self.map[self.j].append(i)
+                    self.map[self.j].append(DMS())
                 elif self.prob - self.Fprob_dict["None"] - self.Fprob_dict["AR1"] - self.Fprob_dict["GCTC"] - self.Fprob_dict["TS"] - self.Fprob_dict["SafeSite"] - self.Fprob_dict["DMS"] <= self.Fprob_dict["AR2"]:
-                    i = AttackRole2()
-                    self.map[self.j].append(i)
+                    self.map[self.j].append(AttackRole2())
                 else:
-                    i = BS()
-                    self.map[self.j].append(i)
-        i = SafeSite()
-        self.map[0][0] = i
-        del i
+                    self.map[self.j].append(BS())
+        self.map[0][0] = SafeSite()
     def if_map(self, x, y):
         """
         判断地图[x][y]项为什么类型

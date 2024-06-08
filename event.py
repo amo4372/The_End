@@ -69,7 +69,7 @@ def event():
             elif map.if_map(user.x, user.y) == -6:
                 map.map[user.x][user.y].pri(user)
                 map.map[user.x][user.y] = None
-            user.pri(int(oper_time.game_time_list[2]), oper_time.if_time(), oper_time.cget_time())
+            user.pri(int(oper_time.game_time_list[2]), oper_time.if_time(), oper_time.cget_time(), oper_time.cget_weather())
             answer = user.move()
             if answer == -1:
                 set_settings.set_settings(user, map, oper_time, thread_died)
@@ -82,13 +82,18 @@ def event():
     except SystemExit:
         pass
     except Exception as e:
-        print(f"游戏出现错误 {e}")
-        print(f"正在尝试备份存档...")
+        print(f"游戏出现错误: {e}")
+        print("正在尝试备份存档...")
         store_files.error_store_file(user, map, oper_time)
+        stop_thread(thread_died)
 def game():
-    global MainThread, thread_died
+    global MainThread, thread_died, user, map, oper_time
     init()
     MainThread = threading.Thread(target=event, name="MainThread")
     MainThread.start()
     thread_died = threading.Thread(target=if_died, name="user_died")
     thread_died.start()
+    thread_weather = threading.Thread(target=oper_time.oper_weather, args=(user,), name="weather", daemon=True)
+    thread_weather.start()
+    thread_autosave = threading.Thread(target=store_files.autosave_file, args=(user, map, oper_time), name="autosave", daemon=True)
+    thread_autosave.start()

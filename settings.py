@@ -1,15 +1,30 @@
 from termcolor import *
 
-version = "v0.0.1.8_240601_beta"
+version = "v0.0.1.9_240608_beta"
 
 NoneType = type(None)
 
+Autosave_state = False
+
+Autosave_time = 0
 
 play_music_state = True
 
-sounds = {"coins": ["sounds/coins/coin0.wav", "sounds/coins/coin1.wav"],
-          "noises": ["sounds/Noise/300hz.wav", "sounds/Noise/600hz.wav", "sounds/Noise/1000hz.wav"],
-          "died": "sounds/Died/requiem0.wav"}
+Weather = ["ThunderStorm", "Rain", "Sunny", "Windy", "Storm", "Cloudy"]
+
+sounds = {"coins": ["sounds/coins/coin0.wav",
+                    "sounds/coins/coin1.wav"],
+          "noises": ["sounds/Noise/300hz.wav",
+                     "sounds/Noise/600hz.wav",
+                     "sounds/Noise/1000hz.wav"],
+          "died": "sounds/Died/requiem0.wav",
+          "weather": ["sounds/Weather/gale_blow_trees.wav",
+                      "sounds/Weather/rain_loop.wav",
+                      "sounds/Weather/storm_coming.wav",
+                      "sounds/Weather/thunder.wav"],
+          "update": ["sounds/Update/powerup0.wav"],
+          "other": ["sip_hot_tea.wav"]
+          }
 
 Reply_Hp_Drug = {"id":"ReplyDrug","NAME":"普通药物" , "PRICE":80, "HP":15, "SP":0,"E":0, "QE":0, "SPEED":0}
 Reply_Sp_Drug = {"id":"ReplyDrug","NAME":"精神药物" ,"PRICE":100, "HP":0, "SP":15, "E":0, "QE":0, "SPEED":0}
